@@ -10,9 +10,9 @@ import java.util.Random;
  * 
  */
 public class RMMemory {
-	private static int SUPERVISOR_MEMORY_SIZE = 1024;
-	private static int MEMORY_SIZE = 3072;
-	private static int BLOCK_SIZE = 16;
+	public static final int SUPERVISOR_MEMORY_SIZE = 1024;
+	public static final int MEMORY_SIZE = 3072;
+	public static final int BLOCK_SIZE = 16;
 
 	private static int[] SUPERVISOR_MEMORY = new int[SUPERVISOR_MEMORY_SIZE];
 	private static int[] MEMORY = new int[MEMORY_SIZE];
@@ -61,7 +61,7 @@ public class RMMemory {
 		return false;
 	}
 
-	private static void generatePagesTable(int start) {
+	private static int generatePagesTable(int start) {
 		for (int i = start; i < start + BLOCK_SIZE; i++) {
 			int guess = 0;
 			do {
@@ -70,13 +70,14 @@ public class RMMemory {
 			} while (!checkIfUsed(guess));
 			set(i + MEMORY_SIZE, guess);
 		}
+		return (BLOCK_SIZE - 1) * 16 * 16 + start;
 	}
 
 	public static VMMemory createVMMemory() {
 		int page = findEmptyPage();
 		if ((page) != -1) {
-			generatePagesTable(page*BLOCK_SIZE);
-			return new VMMemory(BLOCK_SIZE);
+			int ptr = generatePagesTable(page*BLOCK_SIZE);
+			return new VMMemory(ptr);
 		}
 		throw new RuntimeException("No memory space!");
 	}
