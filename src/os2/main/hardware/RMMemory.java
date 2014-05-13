@@ -29,7 +29,6 @@ public class RMMemory {
 	}
 
 	public static void set(int address, int value) {
-		// System.out.println(address);
 		switch (validAddress(address)) {
 		case (1):
 			MEMORY[address] = value;
@@ -90,11 +89,9 @@ public class RMMemory {
 	private static int validAddress(int address) {
 		if (address >= 0 && address < MEMORY_SIZE + SUPERVISOR_MEMORY_SIZE) {
 			if (address < MEMORY_SIZE) {
-				// System.out.println("Vartotojo");
 				return 1;
 			}
 			if (address >= MEMORY_SIZE) {
-				// System.out.println("Super");
 				return 2;
 			}
 		}
