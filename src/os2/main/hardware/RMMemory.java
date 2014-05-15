@@ -4,19 +4,23 @@ import java.util.Random;
 
 /**
  * Realios mašinos atmintis. Vartotojo atmintis [0.. 3071] Supervizorinė
- * atmintis [3072..4098] Puslapių lentelė prasideda nuo 3072 iki 3263. 12 blokų
+ * atmintis [3072..4098] Puslapių lentelė prasideda nuo 3072 iki 3263. 
+ * Supervizorine atmintis darbui nuo 3264 iki 4098
  * 
  * @author domas
  * 
  */
-public class RMMemory {
+public class RMMemory {	
 	public static final int SUPERVISOR_MEMORY_SIZE = 1024;
 	public static final int MEMORY_SIZE = 3072;
 	public static final int BLOCK_SIZE = 16;
+	
+	public static final int SUPERVISOR_MEMORY_BEGIN = 3264;
 
 	private static int[] SUPERVISOR_MEMORY = new int[SUPERVISOR_MEMORY_SIZE];
 	private static int[] MEMORY = new int[MEMORY_SIZE];
 
+	
 	public static int get(int address) {
 		switch (validAddress(address)) {
 		case (1):
@@ -77,11 +81,18 @@ public class RMMemory {
 		int page = findEmptyPage();
 		if ((page) != -1) {
 			int ptr = generatePagesTable(page*BLOCK_SIZE);
-			return new VMMemory(ptr);
+			return new VMMemory(ptr, page);
 		}
 		throw new RuntimeException("No memory space!");
 	}
 
+	public static void clearPage(int page) {
+		int absolutePageAddress = MEMORY_SIZE + page * BLOCK_SIZE;
+		for (int i = absolutePageAddress; i < absolutePageAddress + BLOCK_SIZE; i++) {
+			RMMemory.set(i, 0);
+		}
+	}
+	
 	/**
 	 * 
 	 * @param address
@@ -98,7 +109,8 @@ public class RMMemory {
 		}
 		return 0;
 	}
-
+	
+	// Prints only supervisor memory
 	public static String toStr() {
 		String s = "";
 		for (int i = MEMORY_SIZE; i < MEMORY_SIZE + SUPERVISOR_MEMORY_SIZE; i++) {

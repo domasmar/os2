@@ -1,10 +1,14 @@
 package os2.main.hardware;
 
 public class VMMemory {
+	private static final int VIRTUAL_MEMORY_SIZE = 256;
+	
 	private int ptr = 0;
+	private int pageNumber = 0;
 
-	public VMMemory(int ptr) {
+	public VMMemory(int ptr, int pageNumber) {
 		this.ptr = ptr;
+		this.pageNumber = pageNumber;
 	}
 
 	private int getRealAddress(int index) {
@@ -33,10 +37,11 @@ public class VMMemory {
 		}
 	}
 	
-	// TODO
-	// implement destroy() method
 	public void destroy() {
-		
+		for (int i = 0; i < VIRTUAL_MEMORY_SIZE; i++) {
+			this.set(i, 0);
+		}
+		RMMemory.clearPage(this.pageNumber);
 	}
 
 }
