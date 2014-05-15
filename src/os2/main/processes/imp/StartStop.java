@@ -1,8 +1,8 @@
-package os2.main.process.imp;
+package os2.main.processes.imp;
 
-import os2.main.process.Process;
-import os2.main.process.ProcessStatus;
-import os2.main.process.ProcessType;
+import os2.main.processes.Process;
+import os2.main.processes.ProcessStatus;
+import os2.main.processes.ProcessType;
 
 /**
  * Šis procesas atsakingas už sistemos darbo pradžią ir pabaigą. Įjungus kompiuterį šis procesas

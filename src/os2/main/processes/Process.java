@@ -1,4 +1,4 @@
-package os2.main.process;
+package os2.main.processes;
 
 public abstract class Process {
 		

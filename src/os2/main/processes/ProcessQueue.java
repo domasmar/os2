@@ -1,4 +1,4 @@
-package os2.main.process;
+package os2.main.processes;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;

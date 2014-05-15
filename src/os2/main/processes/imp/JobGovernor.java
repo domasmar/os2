@@ -1,6 +1,6 @@
-package os2.main.process.imp;
+package os2.main.processes.imp;
 
-import os2.main.process.Process;
+import os2.main.processes.Process;
 
 /**
  * Proceso „JobGorvernor“ paskirtis – kurti, naikinti ir padėti procesui „VirtualMachine“ atlikti
