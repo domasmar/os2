@@ -15,7 +15,6 @@ public class FileLoader {
         if (fileNo == -1) {
             throw new Exception("Tokio failo nėra");
         }
-
     }
 
     public int[] getBlockOfFile() {

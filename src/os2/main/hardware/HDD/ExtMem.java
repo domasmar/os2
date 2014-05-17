@@ -54,8 +54,6 @@ public class ExtMem {
         }
 
         private static boolean checkIfAlreadyTaken(int address) {
-            boolean taken = false;
-
             int[] takenFATAddress = new int[20];
             int g = 0;
             for (int i = 3; i < rootSize; i = i + 4) {
@@ -67,12 +65,10 @@ public class ExtMem {
 
             for (int j = 0; j < takenFATAddress.length; j++) {
                 if (address == takenFATAddress[j]) {
-                    taken = true;
-                    break;
+                    return true;
                 }
             }
-
-            return taken;
+            return false;
         }
 
         private static int findEmptyFieldInFAT(int from) {
@@ -85,17 +81,16 @@ public class ExtMem {
         }
 
         private static boolean checkIfFilenameAlreadyExists(int[] filename) {
-            boolean exists = false;
             int[] tempFilenameAsInts = new int[3];
             for (int i = 0; i < rootSize; i = i + 4) {
                 tempFilenameAsInts[0] = getMem(i);
                 tempFilenameAsInts[1] = getMem(i + 1);
                 tempFilenameAsInts[2] = getMem(i + 2);
                 if (Utilities.compareArrays(tempFilenameAsInts, filename)) {
-                    return exists = true;
+                    return true;
                 }
             }
-            return exists;
+            return false;
         }
 
         private static int getLastFATentry(int fileNo) {
@@ -140,17 +135,16 @@ public class ExtMem {
         }
 
         static int getFileNo(int[] filenameAsInts) {
-            int fileNo = -1;
             int[] tempFilenameAsInts = new int[3];
             for (int i = 0; i < rootSize; i = i + 4) {
                 tempFilenameAsInts[0] = getMem(i);
                 tempFilenameAsInts[1] = getMem(i + 1);
                 tempFilenameAsInts[2] = getMem(i + 2);
                 if (Utilities.compareArrays(tempFilenameAsInts, filenameAsInts)) {
-                    return fileNo = i;
+                    return i;
                 }
             }
-            return fileNo;
+            return -1;
         }
 
         static void saveBlock(int[] blockOfData, int fileNo) throws UnsupportedEncodingException {
@@ -200,10 +194,5 @@ public class ExtMem {
             }
             return end;
         }
-
-        static void closeLoad() {
-
-        }
     }
-
 }
