@@ -32,8 +32,18 @@ public class ExtMem {
 
     static class FileSystem {
 
-        public static void getFileList() {
-
+        public static int[] getFileList() {
+            int[] list = new int[60];
+            int j = 0;
+            for (int i = 0; i < rootSize; i = i + 4) {
+                if (getMem(i) != 0) {
+                    list[j] = getMem(i);
+                    list[j + 1] = getMem(i + 1);
+                    list[j + 2] = getMem(i + 2);
+                    j = j + 3;
+                }
+            }
+            return list;
         }
 
         static void initialization() {
