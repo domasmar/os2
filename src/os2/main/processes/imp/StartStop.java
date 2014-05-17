@@ -13,7 +13,7 @@ import os2.main.resources.Resource;
  */
 public class StartStop extends Process {
 
-	public StartStop(Process parent) {
+	public StartStop() {
 		this.type = ProcessType.SYSTEM;
 	}
 
@@ -55,7 +55,6 @@ public class StartStop extends Process {
 			Core.resourceList.deleteAll();
 			Core.running = false;
 			break;
-
 		}
 	}
 

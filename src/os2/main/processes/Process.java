@@ -6,12 +6,12 @@ public abstract class Process {
 	protected int step = 0;
 	protected ProcessStatus status;
 	
-	private int priority;
+	protected int priority = 100;
 	
 	public abstract void nextStep();
 	
 	public int getPriority() {
-		return this.priority * this.type.getValue();
+		return this.priority;
 	}
 
 	public void setPriority(int priority) {

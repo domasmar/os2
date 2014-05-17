@@ -12,6 +12,7 @@ public class ResourceList {
 	}
 	
 	public void addResource(Resource resource) {
+		System.out.println("Naujas resursas: " + resource.getName());
 		this.list.add(resource);
 	}
 	

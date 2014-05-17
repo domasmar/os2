@@ -15,6 +15,8 @@ public class RMMemory {
 	public static final int MEMORY_SIZE = 3072;
 	public static final int BLOCK_SIZE = 16;
 	
+	public static final int TOTAL_MEMORY_SIZE = MEMORY_SIZE + SUPERVISOR_MEMORY_SIZE;
+	
 	public static final int SUPERVISOR_MEMORY_BEGIN = 3264;
 
 	private static int[] SUPERVISOR_MEMORY = new int[SUPERVISOR_MEMORY_SIZE];
@@ -117,6 +119,16 @@ public class RMMemory {
 			s += i + ": " + get(i) + "\n";
 		}
 		return s;
+	}
+
+	public static boolean loadProgramToMemory(byte[] content) {
+		if (content.length > TOTAL_MEMORY_SIZE - SUPERVISOR_MEMORY_BEGIN) {
+			return false;
+		} 
+		for (int i = 0; i < content.length; i++) {
+			SUPERVISOR_MEMORY[SUPERVISOR_MEMORY_BEGIN - MEMORY_SIZE + i] = content[i];
+		}
+		return true;
 	}
 
 }

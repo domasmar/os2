@@ -7,7 +7,8 @@ public class ProcessQueue {
 
 	class ProcessComparator implements Comparator<Process> {		
 		public int compare(Process process1, Process process2) {
-			return (process1.getPriority() > process2.getPriority()) ? 1 : -1; 
+			if (process1.getPriority() == process2.getPriority()) return 0;
+			return (process1.getPriority() < process2.getPriority()) ? 1 : -1; 
 		}		
 	}
 	
@@ -22,8 +23,16 @@ public class ProcessQueue {
 		this.queue.add(process);
 	}
 	
-	public Process get() {
-		return this.queue.remove();
+	public Process get() {		
+		Process p = this.queue.poll();
+		p.setPriority(p.getPriority() - 1);
+		this.queue.add(p);
+		return p;
+	}
+
+	public void deleteAll() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

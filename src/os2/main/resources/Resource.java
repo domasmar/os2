@@ -1,5 +1,7 @@
 package os2.main.resources;
 
+import os2.main.processes.Process;
+
 public class Resource {
 	
 	private Process parent = null;
@@ -22,8 +24,8 @@ public class Resource {
 		this.parent = null;
 	}
 	
-	public void setParent(Process parent) {
-		this.parent = parent;
+	public void setParent(Process process) {
+		this.parent = process;
 	}
 	
 	public void setInformation(Object information) {
