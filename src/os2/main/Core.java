@@ -25,12 +25,12 @@ public class Core {
 		Core.running = true;
 		while (Core.running) {
 			os2.main.processes.Process process = processQueue.get();
-			//System.out.println(process);
 			if (process != null) {
+				System.out.println(process + " žingsnis: " + process.getStep() + " prioritetas: " + process.getPriority());
 				process.nextStep();
 			}
 			try {
-				Thread.sleep(100);
+				Thread.sleep(0);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
