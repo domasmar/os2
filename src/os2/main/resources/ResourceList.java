@@ -31,5 +31,15 @@ public class ResourceList {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void delete(String name) {
+		Iterator<Resource> iterator = this.list.iterator();
+		while (iterator.hasNext()) {
+			Resource resource = iterator.next();
+			if (resource.getName().equalsIgnoreCase(name)) {
+				iterator.remove();
+			}
+		}	
+	}
 	
 }
