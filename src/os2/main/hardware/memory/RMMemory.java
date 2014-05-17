@@ -1,4 +1,4 @@
-package os2.main.hardware;
+package os2.main.hardware.memory;
 
 import java.util.Random;
 

@@ -1,4 +1,6 @@
-package os2.main.hardware;
+package os2.main.hardware.memory;
+
+import os2.main.hardware.CPU;
 
 public class VMMemory {
 	private static final int VIRTUAL_MEMORY_SIZE = 256;
