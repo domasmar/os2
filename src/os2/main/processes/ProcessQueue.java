@@ -14,7 +14,7 @@ public class ProcessQueue {
 	
 	private Comparator<Process> comparator = new ProcessComparator();
 	private PriorityQueue<Process> queue = new PriorityQueue<Process>(comparator);
-	
+		
 	public ProcessQueue() {
 		
 	}
@@ -25,7 +25,7 @@ public class ProcessQueue {
 	
 	public Process get() {		
 		Process p = this.queue.poll();
-		p.setPriority(p.getPriority() - 1);
+		//p.setPriority(p.getPriority() - 1);
 		this.queue.add(p);
 		return p;
 	}
