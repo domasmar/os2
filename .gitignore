@@ -3,3 +3,7 @@ bin/
 .classpath
 src/Testing.java
 /doc/
+/nbproject/private/
+/nbproject/
+manifest.mf
+build.xml
