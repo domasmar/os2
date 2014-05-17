@@ -1,8 +1,10 @@
 package os2.main.processes.imp;
 
+import os2.main.Core;
 import os2.main.processes.Process;
 import os2.main.processes.ProcessStatus;
 import os2.main.processes.ProcessType;
+import os2.main.resources.Resource;
 
 /**
  * Šis procesas atsakingas už sistemos darbo pradžią ir pabaigą. Įjungus kompiuterį šis procesas
@@ -20,24 +22,38 @@ public class StartStop extends Process {
 		switch (step) {
 		case 0:
 			// Sisteminiu resursų inicializacija
-
+			Core.resourceList.addResource(new Resource("HDD"));
+			Core.resourceList.addResource(new Resource("RAM"));
+			Core.resourceList.addResource(new Resource("CPU"));
+			Core.resourceList.addResource(new Resource("SUPERVISOR"));
+			this.step++;
 			break;
 		case 1:
-			// Sisteminių permanentinių resursų inicializacija
-
+			// Sisteminių permanentinių procesų inicializacija
+			Core.processQueue.add(new ReadFromInterface());
+			Core.processQueue.add(new JCL());
+			Core.processQueue.add(new JobToSwap());
+			Core.processQueue.add(new Loader());
+			Core.processQueue.add(new MainProc());
+			Core.processQueue.add(new Interrupt());
+			Core.processQueue.add(new PrintLine());
+			this.step++;
 			break;
 		case 2:
 			// Blokavimas laukiant "OS pabaiga" resurso
-			this.status = ProcessStatus.BLOCKED;
-
+			if (Core.resourceList.searchResource("END_OF_OS") != null) {
+				this.step++;
+			}
 			break;
 		case 3:
 			// Sisteminių procesų naikinimas
-
+			Core.processQueue.deleteAll();
+			this.step++;
 			break;
 		case 4:
 			// Sisteminių resursų naikinimas
-
+			Core.resourceList.deleteAll();
+			Core.running = false;
 			break;
 
 		}
