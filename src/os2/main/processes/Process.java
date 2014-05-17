@@ -6,16 +6,25 @@ public abstract class Process {
 	protected int step = 0;
 	protected ProcessStatus status;
 	
+	protected long startTime = System.nanoTime();
+	
 	protected int priority = 100;
 	
 	public abstract void nextStep();
 	
-	public int getPriority() {
-		return this.priority;
+	public long getPriority() {
+		long timeWithoutWork = (System.nanoTime() - startTime); 
+		return timeWithoutWork;
 	}
 
 	public void setPriority(int priority) {
 		this.priority = priority;
+	}
+	
+
+	protected void changeStep(int i) {
+		this.startTime = System.nanoTime();
+		this.step = i;		
 	}
 
 	public ProcessType getType() {
@@ -29,5 +38,8 @@ public abstract class Process {
 	public void setStatus(ProcessStatus status) {
 		this.status = status;		
 	}
-	
+
+	public int getStep() {
+		return this.step;
+	}
 }

@@ -23,32 +23,33 @@ public class StartStop extends Process {
 		case 0:
 			// Sisteminiu resursų inicializacija
 			Core.resourceList.addResource(new Resource("HDD"));
-			Core.resourceList.addResource(new Resource("RAM"));
+			Core.resourceList.addResource(new Resource("MEMORY"));
 			Core.resourceList.addResource(new Resource("CPU"));
 			Core.resourceList.addResource(new Resource("SUPERVISOR"));
-			this.step++;
+			this.changeStep(this.step + 1);
 			break;
 		case 1:
 			// Sisteminių permanentinių procesų inicializacija
 			Core.processQueue.add(new ReadFromInterface());
-			Core.processQueue.add(new JCL());
-			Core.processQueue.add(new JobToSwap());
-			Core.processQueue.add(new Loader());
-			Core.processQueue.add(new MainProc());
-			Core.processQueue.add(new Interrupt());
-			Core.processQueue.add(new PrintLine());
-			this.step++;
+//			Core.processQueue.add(new JCL());
+//			Core.processQueue.add(new JobToSwap());
+//			Core.processQueue.add(new Loader());
+//			Core.processQueue.add(new MainProc());
+//			Core.processQueue.add(new Interrupt());
+//			Core.processQueue.add(new PrintLine());
+			this.changeStep(this.step + 1);
 			break;
 		case 2:
 			// Blokavimas laukiant "OS pabaiga" resurso
 			if (Core.resourceList.searchResource("END_OF_OS") != null) {
-				this.step++;
+				this.changeStep(this.step + 1);
 			}
+			this.changeStep(2);
 			break;
 		case 3:
 			// Sisteminių procesų naikinimas
 			Core.processQueue.deleteAll();
-			this.step++;
+			this.changeStep(this.step + 1);
 			break;
 		case 4:
 			// Sisteminių resursų naikinimas
