@@ -1,4 +1,4 @@
-package hdd;
+package os2.main.hardware.HDD;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;

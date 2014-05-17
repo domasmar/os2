@@ -1,4 +1,4 @@
-package hdd;
+package os2.main.hardware.HDD;
 
 /**
  *
