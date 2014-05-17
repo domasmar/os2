@@ -122,7 +122,7 @@ public class RMMemory {
 	}
 
 	public static boolean loadProgramToMemory(byte[] content) {
-		if (content.length > TOTAL_MEMORY_SIZE - SUPERVISOR_MEMORY_BEGIN) {
+		if (content.length >= TOTAL_MEMORY_SIZE - SUPERVISOR_MEMORY_BEGIN) {
 			return false;
 		} 
 		for (int i = 0; i < content.length; i++) {
