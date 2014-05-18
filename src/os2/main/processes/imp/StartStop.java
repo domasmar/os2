@@ -43,8 +43,9 @@ public class StartStop extends Process {
 			// Blokavimas laukiant "OS pabaiga" resurso
 			if (Core.resourceList.searchResource("END_OF_OS") != null) {
 				this.changeStep(this.step + 1);
-			}
-			this.changeStep(2);
+			} else {
+				this.changeStep(2);
+			}			
 			break;
 		case 3:
 			// Sisteminių procesų naikinimas
