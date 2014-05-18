@@ -15,12 +15,15 @@ public class JobToSwap extends Process {
 
 	@Override
 	public void nextStep() {
+		int programAddressInSupMemory = -1;
 		Resource res;
 		switch (this.step) {
 		case (0):
 			// Blokuotas, laukiam resurso "Užduoties vygdymo parametrai
 			// supervizorinėje atmintyje" resurso,
 			res = Core.resourceList.searchResource("EXECUTION_PARAMETERS");
+			programAddressInSupMemory = (int) res.getInformation(); // išsisaugau programos pradžios supervizorinėje atmintyje adresą
+			programName = (String) res.getInformation(); // reikalingas programos pavadinimas
 			if (res != null) {
 				this.changeStep(this.step + 1);
 			}
@@ -64,8 +67,8 @@ public class JobToSwap extends Process {
 			// Nustatinėjami kanalų įrenginio registra ir vygdoma komanda "XCHG"
 			ChannelsDevice.ST = 2; // Šaltinis: supervizorinė atmintis
 			ChannelsDevice.DT = 3; // Tikslas: išorinė atmintis
-			// ChannelsDevice.SB = vieta supervizorinėje atmintyje, iš kurios imsiu programą
-			// ChannelsDevice.DB = vieta išorinėje atmintyje, į kurią rašysiu programą
+			ChannelsDevice.SB = programAddressInSupMemory;
+			// ChannelsDevice.DB = vieta išorinėje atmintyje, į kurią rašysiu programą (tikriausiai nereikės)
 			ChannelsDevice.XCHG(); // įrašoma programą iš supervizorinės atminties į išorinę
 			break;
 		case (4):
