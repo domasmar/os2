@@ -1,6 +1,8 @@
 package os2.main.processes.imp;
 
 import os2.main.Core;
+import os2.main.hardware.memory.RMMemory;
+import os2.main.hardware.memory.VMMemory;
 import os2.main.processes.Process;
 import os2.main.resources.Resource;
 
@@ -19,37 +21,57 @@ public class JobGovernor extends Process {
     public void nextStep() {
         switch (this.step) {
             case (0):
-                Resource memory = Core.resourceList.searchResource("Memory");
-                if (memory != null) {
-                    this.changeStep(1);
-                } else {
+                VMMemory memory = null;
+
+                try {
+                    memory = RMMemory.createVMMemory();
+                } catch (RuntimeException e) {
                     this.changeStep(0);
+                    break;
                 }
-                // Blokuotas, laukiam "Vartotojo atmintis" resurso
+
+                Resource memoryR = new Resource("VMMemory");
+                memoryR.setParent(this);
+                memoryR.setInformation(memory);
+                this.changeStep(1);
                 break;
+
+            // Blokuotas, laukiam kol bus išskirta atmintis būsimai virtualiai mašinai
             case (1):
-                Core.resourceList.addResource(new Resource("loaderpacket"));
-                
-                // Sukuriamas resursas "Pakrovimo paketas"
+                Resource loaderPacket = new Resource("LoaderPacket");
+                loaderPacket.setParent(this);
+                //loaderPacket.setInformation(kazka reikia patalpint);
+                Core.resourceList.addResource(loaderPacket);
+                this.changeStep(2);
                 break;
+
+            // Sukuriamas resursas "Pakrovimo paketas"
             case (2):
-                // Laukiam Loader proceso pabaigos  
+                Resource fromLoader = Core.resourceList.searchResource("FromLoader"); // patvarkyti, jog paimtų tą, kurio reik
+                if (fromLoader != null) {
+                    fromLoader.setParent(this);
+                    this.changeStep(3);
+                } else {
+                    this.changeStep(2);
+                }
                 break;
+
+            // Laukiam Loader proceso pagaminto resurso   
             case (3):
-                // Atlaisvinam "Išorinė atmintis" resursą
+                Core.resourceList.delete("ExtMem");
+                this.changeStep(4);  
                 break;
-            case (5):
-                // Laukiamas resursas "Vartotojo atmintis" 
-                break;
-            case (6):
+            // Atlaisvinam "Išorinė atmintis" resursą
+            case (4):
                 // Sukuriam procesą "VirtualMachine"
                 break;
-            case (7):
-			// Blokuotas, laukiam "Iš interrupt" resurso
+            case (5):
+                // Blokuotas, laukiam "Iš interrupt" resurso
                 // Apdorojam
                 break;
-            case (8):
-			// Stabdom VirtualMachine
+            case (6):
+
+                // Stabdom VirtualMachine
                 // Apdorojam pertraukimą
                 // Jeigu pabaigos pertraukimas
                 // Naikinam VirtualMachine
