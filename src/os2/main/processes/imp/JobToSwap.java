@@ -1,6 +1,7 @@
 package os2.main.processes.imp;
 
 import os2.main.Core;
+import os2.main.hardware.ChannelsDevice.ChannelsDevice;
 import os2.main.processes.Process;
 import os2.main.resources.Resource;
 
@@ -31,7 +32,13 @@ public class JobToSwap extends Process {
 			// Blokuotas laukiant "Išorinė atmintis" resurso
 			res = Core.resourceList.searchResource("HDD");
 			if (res != null) {
-				this.changeStep(this.step + 1);
+				if (res.getParent() == null) {
+					res.setParent(this);
+					this.changeStep(this.step + 1);
+				}
+				else {
+					this.changeStep(1);
+				}
 			}
 			else {
 				this.changeStep(1);
@@ -41,7 +48,13 @@ public class JobToSwap extends Process {
 			// Blokuotas laukiant "Kanalų įrenginys" resurso
 			res = Core.resourceList.searchResource("CHANNELS_DEVICE");
 			if (res != null) {
-				this.changeStep(this.step + 1);
+				if (res.getParent() == null) {
+					res.setParent(this);
+					this.changeStep(this.step + 1);
+				}
+				else {
+					this.changeStep(2);
+				}
 			}
 			else {
 				this.changeStep(2);
@@ -49,6 +62,11 @@ public class JobToSwap extends Process {
 			break;
 		case (3):
 			// Nustatinėjami kanalų įrenginio registra ir vygdoma komanda "XCHG"
+			ChannelsDevice.ST = 2; // Šaltinis: supervizorinė atmintis
+			ChannelsDevice.DT = 3; // Tikslas: išorinė atmintis
+			// ChannelsDevice.SB = vieta supervizorinėje atmintyje, iš kurios imsiu programą
+			// ChannelsDevice.DB = vieta išorinėje atmintyje, į kurią rašysiu programą
+			ChannelsDevice.XCHG(); // įrašoma programą iš supervizorinės atminties į išorinę
 			break;
 		case (4):
 			// Atlaisvinamas "Kanalo įrenginys" resursas
