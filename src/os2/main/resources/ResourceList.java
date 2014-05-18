@@ -26,6 +26,17 @@ public class ResourceList {
 		}
 		return null;
 	}
+	
+	public Resource searchChildResource(os2.main.processes.Process process, String name) {
+		Iterator<Resource> iterator = this.list.iterator();
+		while (iterator.hasNext()) {
+			Resource resource = iterator.next();
+			if (resource.getName().equalsIgnoreCase(name) && resource.getParent() == process) {
+				return resource;
+			}
+		}
+		return null;
+	}
 
 	public void deleteAll() {
 		// TODO Auto-generated method stub
@@ -41,5 +52,16 @@ public class ResourceList {
 			}
 		}	
 	}
+	
+	public void deleteChildResource(os2.main.processes.Process process, String name) {
+		Iterator<Resource> iterator = this.list.iterator();
+		while (iterator.hasNext()) {
+			Resource resource = iterator.next();
+			if (resource.getName().equalsIgnoreCase(name) && resource.getParent() == process) {
+				iterator.remove();
+			}
+		}
+	}
+
 	
 }
