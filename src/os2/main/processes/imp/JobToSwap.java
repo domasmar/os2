@@ -8,9 +8,10 @@ import os2.main.resources.Resource;
 /**
  * Šio proceso paskirtis – perkelti užduoties programos blokus iš supervizorinės atminties į
  * išorinę.
- * @author domas
+ * @author Tadas
  *
  */
+
 public class JobToSwap extends Process {
 
 	@Override
@@ -23,9 +24,9 @@ public class JobToSwap extends Process {
 			// Blokuotas, laukiam resurso "Užduoties vygdymo parametrai
 			// supervizorinėje atmintyje" resurso,
 			res = Core.resourceList.searchResource("EXECUTION_PARAMETERS");
-			programAddressInSupMemory = (int) res.getInformation(); // išsisaugau programos pradžios supervizorinėje atmintyje adresą
-			programName = (String) res.getInformation(); // reikalingas programos pavadinimas
 			if (res != null) {
+				programAddressInSupMemory = (int) res.getInformation(); // išsisaugau programos pradžios supervizorinėje atmintyje adresą
+				programName = (String) res.getInformation(); // reikalingas programos pavadinimas
 				this.changeStep(this.step + 1);
 			}
 			else {
@@ -74,9 +75,13 @@ public class JobToSwap extends Process {
 			break;
 		case (4):
 			// Atlaisvinamas "Kanalo įrenginys" resursas
+			res = Core.resourceList.searchResource("CHANNELS_DEVICE");
+			res.removeParent();
+			this.changeStep(this.step + 1);
 			break;
 		case (5):
 			// Sukuriamas "Užduotis bugne" resursas
+			Core.resourceList.addResource(new Resource("PROGRAM_IN_HDD"));
 			this.step = 0;
 			break;
 		}
