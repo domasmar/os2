@@ -40,14 +40,14 @@ public class JobGovernor extends Process {
             case (1):
                 Resource loaderPacket = new Resource("LoaderPacket");
                 loaderPacket.setParent(this);
-                //loaderPacket.setInformation(kazka reikia patalpint);
+                //loaderPacket.setInformation(reikia patalpint Loaderiui objektą vm'o ir pavadinimą failo);
                 Core.resourceList.addResource(loaderPacket);
                 this.changeStep(2);
                 break;
 
             // Sukuriamas resursas "Pakrovimo paketas"
             case (2):
-                Resource fromLoader = Core.resourceList.searchResource("FromLoader"); // patvarkyti, jog paimtų tą, kurio reik
+                Resource fromLoader = Core.resourceList.searchResource("FromLoader"); // kurį FromLoader grąžina? Reikėtų visų, tada galima atsirinkt pagal inforamtion
                 if (fromLoader != null) {
                     fromLoader.setParent(this);
                     this.changeStep(3);
@@ -61,14 +61,25 @@ public class JobGovernor extends Process {
                 Core.resourceList.delete("ExtMem");
                 this.changeStep(4);  
                 break;
+                
             // Atlaisvinam "Išorinė atmintis" resursą
             case (4):
-                // Sukuriam procesą "VirtualMachine"
+                Process vm = new VirtualMachine();
+                //ProcessQueue.add(vm); turi but leidžiama įterpti i sąrašą
+                //ka toliau?
                 break;
+                
+            // Sukuriam procesą "VirtualMachine"
             case (5):
-                // Blokuotas, laukiam "Iš interrupt" resurso
-                // Apdorojam
+                Resource interrupt = Core.resourceList.searchResource("Int"); //atsirinkt kurį int.
+                if (interrupt != null){
+                    this.changeStep(6);
+                }else{
+                    this.changeStep(5);
+                }              
                 break;
+                
+            // Blokuotas, laukiam "Iš interrupt" resurso
             case (6):
 
                 // Stabdom VirtualMachine
