@@ -7,4 +7,8 @@ src/Testing.java
 /nbproject/
 manifest.mf
 build.xml
+<<<<<<< HEAD
+/build/
+=======
 src/OS.java
+>>>>>>> d0716b36abfbda11487ed3da52b16f9c94b224a1

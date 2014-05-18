@@ -72,6 +72,7 @@ public class JobToSwap extends Process {
 			ChannelsDevice.SB = programAddressInSupMemory;
 			// ChannelsDevice.DB = vieta išorinėje atmintyje, į kurią rašysiu programą (tikriausiai nereikės)
 			ChannelsDevice.XCHG(); // įrašoma programą iš supervizorinės atminties į išorinę
+			this.changeStep(4);
 			break;
 		case (4):
 			// Atlaisvinamas "Kanalo įrenginys" resursas
@@ -82,7 +83,7 @@ public class JobToSwap extends Process {
 		case (5):
 			// Sukuriamas "Užduotis bugne" resursas
 			Core.resourceList.addResource(new Resource("PROGRAM_IN_HDD"));
-			this.step = 0;
+			this.changeStep(0);
 			break;
 		}
 	}

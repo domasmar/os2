@@ -22,12 +22,12 @@ public class ChannelsDevice {
 	public static int DT;
 	
 	public static void XCHG() {
-		ArrayList<Integer> programList = new ArrayList<Integer>();
-		boolean isEnd = false;
-		int[] programArray;
-		int index = SB;
-		int value;
 		if (ST == 2 && DT == 3) {
+			ArrayList<Integer> programList = new ArrayList<Integer>();
+			boolean isEnd = false;
+			int[] programArray;
+			int index = SB;
+			int value;
 			do {
 				value = RMMemory.get(index);
 				programList.add(value);
@@ -43,6 +43,9 @@ public class ChannelsDevice {
 				programToHDD.saveBlockOfFile(block);
 			}
 			programToHDD.closeSavedFile();
+		}
+		if (ST == 3 && DT == 1) {
+			
 		}
 	}
 
