@@ -23,24 +23,23 @@ public class ChannelsDevice {
 	
 	public static void XCHG() {
 		ArrayList<Integer> programList = new ArrayList<Integer>();
-		Integer[] programArray;
 		boolean isEnd = false;
-		int index = ST;
+		int[] programArray;
+		int index = SB;
+		int value;
 		if (ST == 2 && DT == 3) {
-			while (!isEnd) {
-				if (RMMemory.get(index) != -1) {
-					programList.add(RMMemory.get(index));
-					end = index;
-				}
-				else {
-					isEnd = true;
-				}
+			do {
+				value = RMMemory.get(index);
+				programList.add(value);
 				index++;
-			}
+			} while (value != -1);
 			FileSaver programToHDD = new FileSaver("programos pavadinimas"); // programos pavadinimas integerių masyve
-			programArray = programList.toArray(new Integer[programList.size()]);
+			programArray = new int[programList.size()];
+			for (int i = 0; i < programList.size(); i++) {
+				programArray[i] = programList.get(i);
+			}
 			for (int i = 0; i < programArray.length / 16 + 1; i++) {
-				Integer[] block = Arrays.copyOfRange(programArray, i * 16, i * 16 + 16);
+				int[] block = Arrays.copyOfRange(programArray, i * 16, i * 16 + 16);
 				programToHDD.saveBlockOfFile(block);
 			}
 			programToHDD.closeSavedFile();

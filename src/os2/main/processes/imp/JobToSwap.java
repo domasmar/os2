@@ -16,6 +16,7 @@ public class JobToSwap extends Process {
 	@Override
 	public void nextStep() {
 		int programAddressInSupMemory = -1;
+		String programName;
 		Resource res;
 		switch (this.step) {
 		case (0):
