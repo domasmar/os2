@@ -125,9 +125,11 @@ public class RMMemory {
 		if (content.length >= TOTAL_MEMORY_SIZE - SUPERVISOR_MEMORY_BEGIN) {
 			return false;
 		} 
-		for (int i = 0; i < content.length; i++) {
+		int i;
+		for (i = 0; i < content.length; i++) {
 			SUPERVISOR_MEMORY[SUPERVISOR_MEMORY_BEGIN - MEMORY_SIZE + i] = content[i];
 		}
+		SUPERVISOR_MEMORY[SUPERVISOR_MEMORY_BEGIN - MEMORY_SIZE + i + 1] = -1;
 		return true;
 	}
 
