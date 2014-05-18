@@ -26,6 +26,7 @@ public class StartStop extends Process {
 			Core.resourceList.addResource(new Resource("MEMORY"));
 			Core.resourceList.addResource(new Resource("CPU"));
 			Core.resourceList.addResource(new Resource("SUPERVISOR"));
+			Core.resourceList.addResource(new Resource("CHANNELS_DEVICE"));
 			this.changeStep(this.step + 1);
 			break;
 		case 1:
