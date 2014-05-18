@@ -1,7 +1,9 @@
 package os2.main.processes;
 
 public abstract class Process {
-		
+	
+	private int pid = PID.getNew(); 
+	
 	protected ProcessType type;
 	protected int step = 0;
 	protected ProcessStatus status;
@@ -41,5 +43,9 @@ public abstract class Process {
 
 	public int getStep() {
 		return this.step;
+	}
+	
+	public int getPid() {
+		return this.pid;
 	}
 }
