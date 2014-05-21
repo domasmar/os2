@@ -4,25 +4,25 @@ import java.util.Random;
 
 /**
  * Realios mašinos atmintis. Vartotojo atmintis [0.. 3071] Supervizorinė
- * atmintis [3072..4098] Puslapių lentelė prasideda nuo 3072 iki 3263. 
+ * atmintis [3072..4098] Puslapių lentelė prasideda nuo 3072 iki 3263.
  * Supervizorine atmintis darbui nuo 3264 iki 4098
  * 
  * @author domas
  * 
  */
-public class RMMemory {	
+public class RMMemory {
 	public static final int SUPERVISOR_MEMORY_SIZE = 1024;
 	public static final int MEMORY_SIZE = 3072;
 	public static final int BLOCK_SIZE = 16;
-	
-	public static final int TOTAL_MEMORY_SIZE = MEMORY_SIZE + SUPERVISOR_MEMORY_SIZE;
-	
+
+	public static final int TOTAL_MEMORY_SIZE = MEMORY_SIZE
+			+ SUPERVISOR_MEMORY_SIZE;
+
 	public static final int SUPERVISOR_MEMORY_BEGIN = 3264;
 
 	private static int[] SUPERVISOR_MEMORY = new int[SUPERVISOR_MEMORY_SIZE];
 	private static int[] MEMORY = new int[MEMORY_SIZE];
 
-	
 	public static int get(int address) {
 		switch (validAddress(address)) {
 		case (1):
@@ -82,7 +82,7 @@ public class RMMemory {
 	public static VMMemory createVMMemory() {
 		int page = findEmptyPage();
 		if ((page) != -1) {
-			int ptr = generatePagesTable(page*BLOCK_SIZE);
+			int ptr = generatePagesTable(page * BLOCK_SIZE);
 			return new VMMemory(ptr, page);
 		}
 		throw new RuntimeException("No memory space!");
@@ -94,7 +94,7 @@ public class RMMemory {
 			RMMemory.set(i, 0);
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param address
@@ -111,7 +111,7 @@ public class RMMemory {
 		}
 		return 0;
 	}
-	
+
 	// Prints only supervisor memory
 	public static String toStr() {
 		String s = "";
@@ -121,16 +121,46 @@ public class RMMemory {
 		return s;
 	}
 
-	public static boolean loadProgramToMemory(byte[] content) {
-		if (content.length >= TOTAL_MEMORY_SIZE - SUPERVISOR_MEMORY_BEGIN) {
-			return false;
-		} 
-		int i;
-		for (i = 0; i < content.length; i++) {
-			SUPERVISOR_MEMORY[SUPERVISOR_MEMORY_BEGIN - MEMORY_SIZE + i] = content[i];
+	// return address of free space
+	private static int searchForFreeSpace(int programSize) {
+		programSize += 2;
+		int begin = SUPERVISOR_MEMORY_BEGIN;
+		boolean useable = true;
+		int size = 0;
+		for (int index = begin; index < SUPERVISOR_MEMORY_SIZE + MEMORY_SIZE
+				- 1; index++) {
+
+			if (RMMemory.get(index) == -1) {
+				useable = useable ? false : true;
+			}
+			size = useable ? size + 1 : 0;
+			// radom laisvos vietos
+			if (size == programSize) {
+				return index - size + 2;
+			}
 		}
-		SUPERVISOR_MEMORY[SUPERVISOR_MEMORY_BEGIN - MEMORY_SIZE + i + 1] = -1;
-		return true;
+		throw new RuntimeException("Nėra vietos");
+	}
+
+	public static int loadProgramToMemory(int[] content) {
+		if (content.length >= TOTAL_MEMORY_SIZE - SUPERVISOR_MEMORY_BEGIN) {
+			return -1;
+		}
+		int programSize = content.length;
+		int start = 0;
+		try {
+			start = searchForFreeSpace(programSize);
+		} catch (Exception e) {
+			return -1;
+		}
+
+		int i;
+		RMMemory.set(start++, -1);
+		for (i = 0; i < content.length; i++) {
+			RMMemory.set(i + start, content[i]);
+		}
+		RMMemory.set(i + start, -1);
+		return start;
 	}
 
 }
