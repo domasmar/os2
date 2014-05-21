@@ -1,7 +1,10 @@
 package os2.main.processes.imp;
 
+import java.io.UnsupportedEncodingException;
+
 import os2.main.Core;
 import os2.main.hardware.ChannelsDevice.ChannelsDevice;
+import os2.main.hardware.HDD.Utilities;
 import os2.main.processes.Process;
 import os2.main.resources.Resource;
 import os2.main.resources.descriptors.ExecParamsDescriptor;
@@ -15,7 +18,7 @@ import os2.main.resources.descriptors.ExecParamsDescriptor;
 
 public class JobToSwap extends Process {
 	
-	private String programName;
+	private int[] programName;
 	private int addressInSupMemory;
 
 	@Override
@@ -29,7 +32,15 @@ public class JobToSwap extends Process {
 			if (res != null) {
 				ExecParamsDescriptor descriptor = (ExecParamsDescriptor) res.getDescriptor();
 				this.addressInSupMemory = descriptor.getAddress();
-				this.programName = descriptor.getProgramName();
+				try {
+					this.programName = Utilities.getFilenameAsInts(descriptor.getProgramName());
+				} catch (UnsupportedEncodingException e) {
+					System.out.println("Nepavyko paversti programos pavadinimo į integerių masyvą!");
+					e.printStackTrace();
+				} catch (Exception e) {
+					System.out.println("Nepavyko paversti programos pavadinimo į integerių masyvą!");
+					e.printStackTrace();
+				}
 				this.changeStep(1);
 			}
 			else {
@@ -73,6 +84,7 @@ public class JobToSwap extends Process {
 			ChannelsDevice.ST = 2; // Šaltinis: supervizorinė atmintis
 			ChannelsDevice.DT = 3; // Tikslas: išorinė atmintis
 			ChannelsDevice.SB = this.addressInSupMemory;
+			ChannelsDevice.programName = this.programName;
 			ChannelsDevice.XCHG(); // įrašoma programą iš supervizorinės atminties į išorinę
 			this.changeStep(4);
 			break;
