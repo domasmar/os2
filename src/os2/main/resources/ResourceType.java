@@ -8,6 +8,7 @@ public class ResourceType {
     public static final String VIRT_MEM = "VIRTUAL_MEMORY";
     public static final String SUP_MEM = "SUPERVISOR_MEMORY";
     public static final String EXT_MEM = "EXTERNAL_MEMORY";
+    public static final String FILE_NAME = "FILE_NAME_OF_PROGRAM";
     public static final String LOAD_PACK = "LOADER_PACKET";
     public static final String PACK_FROM_LOAD = "PACKET_FROM_LOADER";
     public static final String INT = "INTERRUPT_RESOURCE";
