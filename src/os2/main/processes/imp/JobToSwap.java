@@ -27,7 +27,7 @@ public class JobToSwap extends Process {
 			if (res != null) {
 				programAddressInSupMemory = (int) res.getInformation(); // išsisaugau programos pradžios supervizorinėje atmintyje adresą
 				programName = (String) res.getInformation(); // reikalingas programos pavadinimas
-				this.changeStep(this.step + 1);
+				this.changeStep(1);
 			}
 			else {
 				this.changeStep(0);
@@ -37,9 +37,9 @@ public class JobToSwap extends Process {
 			// Blokuotas laukiant "Išorinė atmintis" resurso
 			res = Core.resourceList.searchResource("HDD");
 			if (res != null) {
-				if (res.getParent() == null) {
+				if (res.getParent() == null || res.getParent() == this) {
 					res.setParent(this);
-					this.changeStep(this.step + 1);
+					this.changeStep(2);
 				}
 				else {
 					this.changeStep(1);
@@ -53,7 +53,7 @@ public class JobToSwap extends Process {
 			// Blokuotas laukiant "Kanalų įrenginys" resurso
 			res = Core.resourceList.searchResource("CHANNELS_DEVICE");
 			if (res != null) {
-				if (res.getParent() == null) {
+				if (res.getParent() == null || res.getParent() == this) {
 					res.setParent(this);
 					this.changeStep(this.step + 1);
 				}
@@ -70,7 +70,6 @@ public class JobToSwap extends Process {
 			ChannelsDevice.ST = 2; // Šaltinis: supervizorinė atmintis
 			ChannelsDevice.DT = 3; // Tikslas: išorinė atmintis
 			ChannelsDevice.SB = programAddressInSupMemory;
-			// ChannelsDevice.DB = vieta išorinėje atmintyje, į kurią rašysiu programą (tikriausiai nereikės)
 			ChannelsDevice.XCHG(); // įrašoma programą iš supervizorinės atminties į išorinę
 			this.changeStep(4);
 			break;

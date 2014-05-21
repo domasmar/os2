@@ -37,6 +37,7 @@ public class Loader extends Process {
 			if (res != null) {
 				if (res.getParent() == null) {
 					res.setParent(this);
+					this.changeStep(2);
 				} else {
 					this.changeStep(1);
 				}
