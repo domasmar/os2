@@ -5,7 +5,6 @@ import os2.main.hardware.ChannelsDevice.ChannelsDevice;
 import os2.main.processes.Process;
 import os2.main.resources.Resource;
 import os2.main.resources.descriptors.ExecParamsDescriptor;
-import os2.main.resources.descriptors.FromGUIDescriptor;
 
 /**
  * Šio proceso paskirtis – perkelti užduoties programos blokus iš supervizorinės atminties į
@@ -21,8 +20,6 @@ public class JobToSwap extends Process {
 
 	@Override
 	public void nextStep() {
-		int programAddressInSupMemory = -1;
-		String programName;
 		Resource res;
 		switch (this.step) {
 		case (0):
@@ -30,9 +27,8 @@ public class JobToSwap extends Process {
 			// supervizorinėje atmintyje" resurso,
 			res = Core.resourceList.searchResource("EXECUTION_PARAMETERS");
 			if (res != null) {
-				programAddressInSupMemory = (int) res.getInformation(); // išsisaugau programos pradžios supervizorinėje atmintyje adresą
-				ExecParamsDescriptor descriptor = (ExecParamsDescriptor) res.getDescriptor(); // reikalingas programos pavadinimas
-				this.addressInSupMemory = descriptor.getProgramAddress();
+				ExecParamsDescriptor descriptor = (ExecParamsDescriptor) res.getDescriptor();
+				this.addressInSupMemory = descriptor.getAddress();
 				this.programName = descriptor.getProgramName();
 				this.changeStep(1);
 			}
@@ -62,7 +58,7 @@ public class JobToSwap extends Process {
 			if (res != null) {
 				if (res.getParent() == null || res.getParent() == this) {
 					res.setParent(this);
-					this.changeStep(this.step + 1);
+					this.changeStep(3);
 				}
 				else {
 					this.changeStep(2);
@@ -76,7 +72,7 @@ public class JobToSwap extends Process {
 			// Nustatinėjami kanalų įrenginio registra ir vygdoma komanda "XCHG"
 			ChannelsDevice.ST = 2; // Šaltinis: supervizorinė atmintis
 			ChannelsDevice.DT = 3; // Tikslas: išorinė atmintis
-			ChannelsDevice.SB = programAddressInSupMemory;
+			ChannelsDevice.SB = this.addressInSupMemory;
 			ChannelsDevice.XCHG(); // įrašoma programą iš supervizorinės atminties į išorinę
 			this.changeStep(4);
 			break;
