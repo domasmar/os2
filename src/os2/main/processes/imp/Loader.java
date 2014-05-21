@@ -2,8 +2,11 @@ package os2.main.processes.imp;
 
 import os2.main.Core;
 import os2.main.hardware.ChannelsDevice.ChannelsDevice;
+import os2.main.hardware.memory.VMMemory;
 import os2.main.processes.Process;
 import os2.main.resources.Resource;
+import os2.main.resources.descriptors.FromLoaderDescriptor;
+import os2.main.resources.descriptors.LoaderPacketDescriptor;
 
 /**
  * Šio proceso paskirtis – išorinėje atmintyje esančius blokus 
@@ -13,19 +16,23 @@ import os2.main.resources.Resource;
  */
 
 public class Loader extends Process {
+	
+	private VMMemory vmm;
+	private int[] programName;
+	private JobGovernor jg;
 
 	@Override
 	public void nextStep() {
 		Resource res;
-		String programName;
-		int destinationAddress;
 		switch (this.step) {
 		case (0):
 			// Blokuotas, laukiam resurso "Pakrovimo paketas"
 			res = Core.resourceList.searchResource("LOADER_PACKET");
 			if (res != null) {
-				programName = (String) res.getInformation(); // gausiu iš Artūro programos pavadinimą
-				destinationAddress = (int) res.getInformation(); // iš kur gauti vartotojo atminties adresą, kur rašyti programą?
+				LoaderPacketDescriptor descriptor = (LoaderPacketDescriptor) res.getDescriptor();
+				this.programName = descriptor.getFilename();
+				this.vmm = descriptor.getMemory();
+				this.jg = (JobGovernor) res.getParent();
 				this.changeStep(1);
 			} else {
 				this.changeStep(0);
@@ -49,7 +56,8 @@ public class Loader extends Process {
 			// Nustatom kanalų įrenginio registrus ir vykdom komandą XCHG
 			ChannelsDevice.ST = 3; // Šaltinis: išorinė atmintis
 			ChannelsDevice.DT = 1; // Tikslas: vartotojo atmintis
-			// ChannelsDevice.DB = vieta vartotojo atmintyje
+			ChannelsDevice.programName = this.programName;
+			ChannelsDevice.vmm = this.vmm;
 			ChannelsDevice.XCHG();
 			this.changeStep(3);
 			break;
@@ -62,6 +70,11 @@ public class Loader extends Process {
 		case (4):
 			// Sukuriamas "Iš loader" resursas, skirtas JobGovernor procesui
 			// sukūrusiam gautąjį "Pakrovimo paketo" resursą
+			res = new Resource("FROM_LOADER");
+			res.setParent(this.jg);
+			FromLoaderDescriptor descriptor = new FromLoaderDescriptor();
+			descriptor.setMessage("Programa " + this.programName + " iš išorinės atminties perkelta į vartotojo");
+			res.setDescriptor(descriptor);
 			Core.resourceList.addResource(new Resource("FROM_LOADER"));
 			this.changeStep(0);
 			break;
