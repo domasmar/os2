@@ -4,13 +4,12 @@ import os2.main.Core;
 import os2.main.hardware.memory.RMMemory;
 import os2.main.hardware.memory.VMMemory;
 import os2.main.processes.Process;
+import os2.main.processes.ProcessQueue;
 import os2.main.resources.Resource;
 import os2.main.resources.ResourceType;
 import os2.main.resources.descriptors.FilenameDescriptor;
 import os2.main.resources.descriptors.LoaderPacketDescriptor;
 import os2.main.resources.descriptors.VirtualMemoryDescriptor;
-import os2.main.resources.descriptors.interfaces.ResourceDescriptorInterface;
-
 /**
  * Proceso „JobGorvernor“ paskirtis – kurti, naikinti ir padėti procesui
  * „VirtualMachine“ atlikti savo darbą, t. y. atlikti veiksmus, kurių
@@ -49,7 +48,7 @@ public class JobGovernor extends Process {
             // Blokuotas, laukiam kol bus galima išskirti atminties būsimai virtualiai mašinai ir ją patalpiname į resursų sąrašą
             case (1):
                 memory = null;
-                memDes = (VirtualMemoryDescriptor) Core.resourceList.searchChildResource(this, ResourceType.PACK_FROM_LOAD).getDescriptor();
+                memDes = (VirtualMemoryDescriptor) Core.resourceList.searchChildResource(this, ResourceType.VIRT_MEM).getDescriptor();
                 memory = memDes.getMemory();
                 if (memory == null){
                     this.changeStep(1);
@@ -76,8 +75,7 @@ public class JobGovernor extends Process {
                 break;
 
                 //Paimame virtualią atmintį iš resursų sąrašo, susirandame failo pavadinimą tarp resursų, 
-                //kurį reikės paduot loader paketui ir sukūrę loader paketą jį įdedam į sąrašą
-                
+                //kurį reikės paduot loader paketui ir sukūrę loader paketą jį įdedam į sąrašą               
             case (2):
                 Resource fromLoader = Core.resourceList.searchChildResource(this, ResourceType.PACK_FROM_LOAD); 
                 if (fromLoader != null) {
@@ -88,32 +86,32 @@ public class JobGovernor extends Process {
                 }
                 break;
 
-            // Laukiam Loader proceso resurso(pranešimo apie darbo pabaigą)   
-            case (3):
-                Core.resourceList.delete(ResourceType.EXT_MEM);
-                this.changeStep(4);  
-                break;
-                
-            // Atlaisvinam "Išorinė atmintis" resursą
-            case (4):
+            // Laukiam Loader proceso resurso(pranešimo apie darbo pabaigą)           
+            case(3):
+                Resource memRes = Core.resourceList.searchChildResource(this, ResourceType.VIRT_MEM);
+                if (memRes == null){
+                    this.changeStep(3);
+                    break;
+                }
                 Process vm = new VirtualMachine();
-                //ProcessQueue.add(vm); turi but leidžiama įterpti i sąrašą
-                //ka toliau?
+                memRes.setParent(vm);            
+                Core.processQueue.add(vm);
+                this.changeStep(4);
                 break;
                 
             // Sukuriam procesą "VirtualMachine"
-            case (5):
-                Resource interrupt = Core.resourceList.searchResource(ResourceType.INT); //atsirinkt kurį int.
+            case (4):
+                Resource interrupt = Core.resourceList.searchChildResource(this, ResourceType.INT); 
                 if (interrupt != null){
-                    this.changeStep(6);
-                }else{
                     this.changeStep(5);
+                }else{
+                    this.changeStep(4);
                 }              
                 break;
                 
             // Blokuotas, laukiam "Iš interrupt" resurso
-            case (6):
-
+            case (5):
+                
                 // Stabdom VirtualMachine
                 // Apdorojam pertraukimą
                 // Jeigu pabaigos pertraukimas
@@ -125,5 +123,4 @@ public class JobGovernor extends Process {
                 break;
         }
     }
-
 }
