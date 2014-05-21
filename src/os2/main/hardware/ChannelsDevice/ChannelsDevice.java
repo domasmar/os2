@@ -7,6 +7,7 @@ import java.util.Arrays;
 import os2.main.hardware.HDD.FileLoader;
 import os2.main.hardware.HDD.FileSaver;
 import os2.main.hardware.memory.RMMemory;
+import os2.main.hardware.memory.VMMemory;
 
 public class ChannelsDevice {
 	
@@ -23,12 +24,12 @@ public class ChannelsDevice {
 	public static int ST;
 	public static int DT;
 	public static int[] programName;
+	public static VMMemory vmm;
 	
 	public static void XCHG() {
 		/* Kopijavimas iš supervizorinės atminties į išorinę */
 		if (ST == 2 && DT == 3) {
 			ArrayList<Integer> programList = new ArrayList<Integer>();
-			boolean isEnd = false;
 			FileSaver programToHDD = null;
 			int[] programArray;
 			int addressInSup = SB;
@@ -60,6 +61,7 @@ public class ChannelsDevice {
 			programToHDD.closeSavedFile();
 		}
 		
+		/* Kopijavimas iš išorinės atminties į vartotojo */
 		if (ST == 3 && DT == 1) {
 			FileLoader program = null;
 			try {
