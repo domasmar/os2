@@ -4,6 +4,8 @@ import os2.main.Core;
 import os2.main.hardware.ChannelsDevice.ChannelsDevice;
 import os2.main.processes.Process;
 import os2.main.resources.Resource;
+import os2.main.resources.descriptors.ExecParamsDescriptor;
+import os2.main.resources.descriptors.FromGUIDescriptor;
 
 /**
  * Šio proceso paskirtis – perkelti užduoties programos blokus iš supervizorinės atminties į
@@ -13,6 +15,9 @@ import os2.main.resources.Resource;
  */
 
 public class JobToSwap extends Process {
+	
+	private String programName;
+	private int addressInSupMemory;
 
 	@Override
 	public void nextStep() {
@@ -21,12 +26,14 @@ public class JobToSwap extends Process {
 		Resource res;
 		switch (this.step) {
 		case (0):
-			// Blokuotas, laukiam resurso "Užduoties vygdymo parametrai
+			// Blokuotas, laukiam resurso "Užduoties vykdymo parametrai
 			// supervizorinėje atmintyje" resurso,
 			res = Core.resourceList.searchResource("EXECUTION_PARAMETERS");
 			if (res != null) {
 				programAddressInSupMemory = (int) res.getInformation(); // išsisaugau programos pradžios supervizorinėje atmintyje adresą
-				programName = (String) res.getInformation(); // reikalingas programos pavadinimas
+				ExecParamsDescriptor descriptor = (ExecParamsDescriptor) res.getDescriptor(); // reikalingas programos pavadinimas
+				this.addressInSupMemory = descriptor.getProgramAddress();
+				this.programName = descriptor.getProgramName();
 				this.changeStep(1);
 			}
 			else {
