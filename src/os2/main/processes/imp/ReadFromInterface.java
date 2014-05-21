@@ -21,7 +21,7 @@ import os2.main.resources.descriptors.PrintDescriptor;
 public class ReadFromInterface extends Process {
 
 	private String fileName;
-	private byte[] content;
+	private int[] content;
 
 	@Override
 	public void nextStep() {
@@ -43,7 +43,11 @@ public class ReadFromInterface extends Process {
 		case (1):
 			// Nuskaitom failą
 			try {
-				this.content = Files.readAllBytes(Paths.get(this.fileName));
+				byte byteContent[] = Files.readAllBytes(Paths.get(this.fileName));
+				this.content = new int[byteContent.length];
+				for (int i = 0; i < byteContent.length; i++) {
+					this.content[i] = (new Byte(byteContent[i])).intValue();
+				}
 				this.changeStep(this.step + 1);
 			} catch (IOException e) {
 				e.printStackTrace();

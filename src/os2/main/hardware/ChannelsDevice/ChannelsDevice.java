@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import os2.main.hardware.HDD.FileLoader;
 import os2.main.hardware.HDD.FileSaver;
 import os2.main.hardware.memory.RMMemory;
 
@@ -30,12 +31,12 @@ public class ChannelsDevice {
 			boolean isEnd = false;
 			FileSaver programToHDD = null;
 			int[] programArray;
-			int index = SB;
+			int addressInSup = SB;
 			int value;
 			do {
-				value = RMMemory.get(index);
+				value = RMMemory.get(addressInSup);
 				programList.add(value);
-				index++;
+				addressInSup++;
 			} while (value != -1);
 			try {
 				programToHDD = new FileSaver(programName);
@@ -60,7 +61,16 @@ public class ChannelsDevice {
 		}
 		
 		if (ST == 3 && DT == 1) {
-			
+			FileLoader program = null;
+			try {
+				program = new FileLoader(programName);
+			} catch (Exception e) {
+				System.out.println("Problema, skaitant programą iš išorinės atminties!");
+				e.printStackTrace();
+			}
+			while (!program.checkIfFileEnd()) {
+				// įrašau programą blokais į VMM
+			}
 		}
 	}
 
