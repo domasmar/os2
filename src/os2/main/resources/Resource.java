@@ -1,12 +1,13 @@
 package os2.main.resources;
 
 import os2.main.processes.Process;
+import os2.main.resources.descriptors.interfaces.ResourceDescriptorInterface;
 
 public class Resource {
 	
 	private Process parent = null;
 	private String name;
-	private Object information = null;
+	private ResourceDescriptorInterface descriptor = null;
 	
 	public Resource(String name) {
 		this.name = name;
@@ -28,11 +29,11 @@ public class Resource {
 		this.parent = process;
 	}
 	
-	public void setInformation(Object information) {
-		this.information = information;
+	public void setDescriptor(ResourceDescriptorInterface descriptor) {
+		this.descriptor = descriptor;
 	}
 	
-	public Object getInformation() {
-		return this.information;
+	public ResourceDescriptorInterface getDescriptor() {
+		return this.descriptor;
 	}
 }

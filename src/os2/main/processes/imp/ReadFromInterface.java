@@ -8,6 +8,8 @@ import os2.main.Core;
 import os2.main.hardware.memory.RMMemory;
 import os2.main.processes.Process;
 import os2.main.resources.Resource;
+import os2.main.resources.descriptors.FromGUIDescriptor;
+import os2.main.resources.descriptors.PrintDescriptor;
 
 /**
  * Šį procesą kuria ir naikina procesas „StartStop“. Proceso paskirtis – gavus
@@ -29,7 +31,9 @@ public class ReadFromInterface extends Process {
 			// Blokuojam kol sulaukiam resurso "Iš vartojo sąsajos
 			res = Core.resourceList.searchResource("FROM_GUI");
 			if (res != null) {
-				this.fileName = (String) res.getInformation();
+				FromGUIDescriptor descriptor = (FromGUIDescriptor) res
+						.getDescriptor();
+				this.fileName = descriptor.getFileName();
 				Core.resourceList.delete("FROM_GUI");
 				this.changeStep(this.step + 1);
 			} else {
@@ -44,8 +48,10 @@ public class ReadFromInterface extends Process {
 			} catch (IOException e) {
 				e.printStackTrace();
 				Resource r = new Resource("PRINT");
-				r.setInformation("Klaida: Failas: " + this.fileName
+				PrintDescriptor printDescriptor = new PrintDescriptor();
+				printDescriptor.setMessage("Klaida: Failas: " + this.fileName
 						+ " neegzistuoja arba jo nepavyko atidaryti");
+				r.setDescriptor(printDescriptor);
 				Core.resourceList.addResource(r);
 				this.changeStep(0);
 			}
@@ -73,9 +79,11 @@ public class ReadFromInterface extends Process {
 						this.changeStep(this.step + 1);
 					} else {
 						Resource r = new Resource("PRINT");
-						r.setInformation("Klaida: Failas: "
+						PrintDescriptor printDescriptor = new PrintDescriptor();
+						printDescriptor.setMessage("Klaida: Failas: "
 								+ this.fileName
 								+ " negali būti perkeltas į supervizorinę atmintį, nes yra per didelis");
+						r.setDescriptor(printDescriptor);
 						Core.resourceList.addResource(r);
 						this.changeStep(0);
 					}
