@@ -46,7 +46,7 @@ public class Loader extends Process {
 			}
 			break;
 		case (2):
-			// Nustatom kanalų įrenginio registrus ir vygdom komandą XCHG
+			// Nustatom kanalų įrenginio registrus ir vykdom komandą XCHG
 			ChannelsDevice.ST = 3; // Šaltinis: išorinė atmintis
 			ChannelsDevice.DT = 1; // Tikslas: vartotojo atmintis
 			// ChannelsDevice.DB = vieta vartotojo atmintyje

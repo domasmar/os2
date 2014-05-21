@@ -1,9 +1,13 @@
 package os2.main.processes.imp;
 
+import java.io.UnsupportedEncodingException;
+
 import os2.main.Core;
 import os2.main.hardware.ChannelsDevice.ChannelsDevice;
+import os2.main.hardware.HDD.Utilities;
 import os2.main.processes.Process;
 import os2.main.resources.Resource;
+import os2.main.resources.descriptors.ExecParamsDescriptor;
 
 /**
  * Šio proceso paskirtis – perkelti užduoties programos blokus iš supervizorinės atminties į
@@ -13,20 +17,30 @@ import os2.main.resources.Resource;
  */
 
 public class JobToSwap extends Process {
+	
+	private int[] programName;
+	private int addressInSupMemory;
 
 	@Override
 	public void nextStep() {
-		int programAddressInSupMemory = -1;
-		String programName;
 		Resource res;
 		switch (this.step) {
 		case (0):
-			// Blokuotas, laukiam resurso "Užduoties vygdymo parametrai
+			// Blokuotas, laukiam resurso "Užduoties vykdymo parametrai
 			// supervizorinėje atmintyje" resurso,
 			res = Core.resourceList.searchResource("EXECUTION_PARAMETERS");
 			if (res != null) {
-				programAddressInSupMemory = (int) res.getInformation(); // išsisaugau programos pradžios supervizorinėje atmintyje adresą
-				programName = (String) res.getInformation(); // reikalingas programos pavadinimas
+				ExecParamsDescriptor descriptor = (ExecParamsDescriptor) res.getDescriptor();
+				this.addressInSupMemory = descriptor.getAddress();
+				try {
+					this.programName = Utilities.getFilenameAsInts(descriptor.getProgramName());
+				} catch (UnsupportedEncodingException e) {
+					System.out.println("Nepavyko paversti programos pavadinimo į integerių masyvą!");
+					e.printStackTrace();
+				} catch (Exception e) {
+					System.out.println("Nepavyko paversti programos pavadinimo į integerių masyvą!");
+					e.printStackTrace();
+				}
 				this.changeStep(1);
 			}
 			else {
@@ -55,7 +69,7 @@ public class JobToSwap extends Process {
 			if (res != null) {
 				if (res.getParent() == null || res.getParent() == this) {
 					res.setParent(this);
-					this.changeStep(this.step + 1);
+					this.changeStep(3);
 				}
 				else {
 					this.changeStep(2);
@@ -69,7 +83,8 @@ public class JobToSwap extends Process {
 			// Nustatinėjami kanalų įrenginio registra ir vygdoma komanda "XCHG"
 			ChannelsDevice.ST = 2; // Šaltinis: supervizorinė atmintis
 			ChannelsDevice.DT = 3; // Tikslas: išorinė atmintis
-			ChannelsDevice.SB = programAddressInSupMemory;
+			ChannelsDevice.SB = this.addressInSupMemory;
+			ChannelsDevice.programName = this.programName;
 			ChannelsDevice.XCHG(); // įrašoma programą iš supervizorinės atminties į išorinę
 			this.changeStep(4);
 			break;
