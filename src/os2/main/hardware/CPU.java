@@ -137,7 +137,7 @@ public class CPU {
 	public static byte getSTI() {
 		return STI;
 	}
-	
+
 	public static byte getPI() {
 		return PI;
 	}
@@ -204,6 +204,6 @@ public class CPU {
 
 	public static void setPI(byte value) {
 		PI = value;
-		
+
 	}
 }
