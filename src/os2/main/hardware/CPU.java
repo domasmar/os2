@@ -4,78 +4,198 @@ public class CPU {
 	/**
 	 * darbinis registras
 	 */
-	public static byte AX = 0;
+	private static int AX = 0;
 	/**
 	 * darbinis registras
 	 */
-	public static byte BX = 0;
+	private static int BX = 0;
 	/**
 	 * puslapių lentelės registras
 	 */
-	public static byte PTR = 0;
+	private static int PTR = 0;
 	/**
 	 * vykdomos komandos skaitikliukas
 	 */
-	public static byte IP = 0;
+	private static short IP = 0;
 	/**
 	 * steko rodyklė
 	 */
-	public static byte SP = 0;
+	private static short SP = 0;
 	/**
 	 * loginis registras
 	 */
-	public static byte C = 0;
+	private static byte C = 0;
 	/**
 	 * 0 - vartotojo režimas, 1 - supervizoriaus režimas
 	 */
-	public static byte MODE = 0;
+	private static byte MODE = 0;
 	/**
 	 * programinis pertraukimas
 	 */
-	public static byte PI = 0;
+	private static byte PI = 0;
 	/**
 	 * supervizoriaus pertraukimas
 	 */
-	public static byte SI = 0;
+	private static byte SI = 0;
 	/**
 	 * išvedimo, įvedimo pertraukimas
 	 */
-	public static byte IOI = 0;
+	private static byte IOI = 0;
 	/**
 	 * timerio pertraukimas
 	 */
-	public static byte TI = 0;
+	private static byte TI = 0;
 	/**
 	 * 1 kanalo registras
 	 */
-	public static byte CHST0 = 0;
+	private static byte CHST0 = 0;
 	/**
 	 * 2 kanalo registras
 	 */
-	public static byte CHST1 = 0;
+	private static byte CHST1 = 0;
 	/**
 	 * 3 kanalo registras
 	 */
-	public static byte CHST2 = 0;
+	private static byte CHST2 = 0;
 	/**
 	 * steko pertraukimas
 	 */
-	public static byte STI = 0;
+	private static byte STI = 0;
 	/**
 	 * timeris
 	 */
-	public static byte TIMER = 0;
+	private static int TIMER = 0;
 	/**
 	 * duomenų segmentas
 	 */
-	public static byte DS = 0;
+	private static short DS = 0;
 	/**
 	 * kodo segmentas
 	 */
-	public static byte CS = 0;
+	private static short CS = 0;
 	/**
 	 * steko segmentas
 	 */
-	public static byte SS = 0;
+	private static short SS = 0;
+        
+        
+        public int getAX() {
+            return this.AX;
+        }
+        
+        public int getBX() {
+            return this.BX;
+        }
 	
+        public int getPTR() {
+            return this.PTR;
+        }
+        
+        public int getTIMER() {
+            return this.TIMER;
+        }
+        
+        public short getCS() {
+            return this.CS;
+        }
+        
+        public short getDS() {
+            return this.DS;
+        }
+        
+        public short getSS() {
+            return this.SS;
+        }
+        
+        public short getIP() {
+            return this.IP;
+        }
+        
+        public short getSP() {
+            return this.SP;
+        }
+        
+        public byte getC() {
+            return this.C;
+        }
+        
+        public byte getMODE() {
+            return this.MODE;
+        }
+        
+        public byte getCHST0() {
+            return this.CHST0;
+        }
+        
+        public byte getCHST1() {
+            return this.CHST1;
+        }
+        
+        public byte getCHST2() {
+            return this.CHST2;
+        }
+        
+        public byte getSTI() {
+            return this.STI;
+        }
+        
+        public void setAX(int value) {
+            this.AX = value;
+        }
+        
+        public void setBX(int value) {
+            this.AX = value;
+        }
+	
+        public void setPTR(int value) {
+            this.AX = value;
+        }
+        
+        public void setTIMER(int value) {
+            this.AX = value;
+        }
+        
+        public void setCS(short value) {
+            this.AX = value;
+        }
+        
+        public void setDS(short value) {
+            this.AX = value;
+        }
+        
+        public void setSS(short value) {
+            this.AX = value;
+        }
+        
+        public void setIP(short value) {
+            this.AX = value;
+        }
+        
+        public void setSP(short value) {
+            this.AX = value;
+        }
+        
+        public void setC(byte value) {
+            this.AX = value;
+        }
+        
+        public void setMODE(byte value) {
+            this.AX = value;
+        }
+        
+        public void setCHST0(byte value) {
+            this.AX = value;
+        }
+        
+        public void setCHST1(byte value) {
+            this.AX = value;
+        }
+        
+        public void setCHST2(byte value) {
+            this.AX = value;
+        }
+        
+        public void setSTI(byte value) {
+            this.AX = value;
+        }
 }
