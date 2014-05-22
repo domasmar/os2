@@ -17,6 +17,7 @@ public class CommandsConverter {
 	private String[] commands;
 
 	public CommandsConverter(String sourceCode) throws Exception {
+		sourceCode = sourceCode.trim();
 		saveSourceCode(sourceCode);
 		validateSourceCode();
 		saveCommands();
@@ -56,7 +57,7 @@ public class CommandsConverter {
 	private void saveSourceCode(String sourceCode) {
 		String tidySourceCode = sourceCode.replaceAll("(?m)^[ \t]*\r?\n", "")
 				.trim().toLowerCase();
-		this.sourceCode = tidySourceCode.split("\n");
+		this.sourceCode = tidySourceCode.split("\r\n");
 	}
 
 	public String[] getCommands() {
