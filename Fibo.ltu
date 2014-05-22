@@ -1,0 +1,34 @@
+vienetas def 1
+narys def 10
+skait def 3
+pirm def 0
+antr def 0
+rezultatas def 0
+
+PUSH vienetas
+PUSH vienetas
+ADD
+suma
+POP pirm
+POP antr
+PUSH pirm
+PUSH antr	
+ADD
+POP antr 
+POP pirm
+PUSH vienetas
+PUSH skait
+ADD
+POP skait
+POP vienetas
+PUSH narys
+PUSH skait
+CMP
+POP skait
+POP narys
+PUSH pirm
+PUSH antr
+JNE suma
+POP rezultatas
+PUSH rezultatas
+OUTM rezultatas
