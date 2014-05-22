@@ -79,123 +79,123 @@ public class CPU {
 	private static short SS = 0;
         
         
-        public int getAX() {
-            return this.AX;
+        public static int getAX() {
+            return AX;
         }
         
-        public int getBX() {
-            return this.BX;
+        public static int getBX() {
+            return BX;
         }
 	
-        public int getPTR() {
-            return this.PTR;
+        public static int getPTR() {
+            return PTR;
         }
         
-        public int getTIMER() {
-            return this.TIMER;
+        public static int getTIMER() {
+            return TIMER;
         }
         
-        public short getCS() {
-            return this.CS;
+        public static short getCS() {
+            return CS;
         }
         
-        public short getDS() {
-            return this.DS;
+        public static short getDS() {
+            return DS;
         }
         
-        public short getSS() {
-            return this.SS;
+        public static short getSS() {
+            return SS;
         }
         
-        public short getIP() {
-            return this.IP;
+        public static short getIP() {
+            return IP;
         }
         
-        public short getSP() {
-            return this.SP;
+        public static short getSP() {
+            return SP;
         }
         
-        public byte getC() {
-            return this.C;
+        public static byte getC() {
+            return C;
         }
         
-        public byte getMODE() {
-            return this.MODE;
+        public static byte getMODE() {
+            return MODE;
         }
         
-        public byte getCHST0() {
-            return this.CHST0;
+        public static byte getCHST0() {
+            return CHST0;
         }
         
-        public byte getCHST1() {
-            return this.CHST1;
+        public static byte getCHST1() {
+            return CHST1;
         }
         
-        public byte getCHST2() {
-            return this.CHST2;
+        public static byte getCHST2() {
+            return CHST2;
         }
         
-        public byte getSTI() {
-            return this.STI;
+        public static byte getSTI() {
+            return STI;
         }
         
-        public void setAX(int value) {
-            this.AX = value;
+        public static void setAX(int value) {
+            AX = value;
         }
         
-        public void setBX(int value) {
-            this.AX = value;
+        public static void setBX(int value) {
+            AX = value;
         }
 	
-        public void setPTR(int value) {
-            this.AX = value;
+        public static void setPTR(int value) {
+            AX = value;
         }
         
-        public void setTIMER(int value) {
-            this.AX = value;
+        public static void setTIMER(int value) {
+            AX = value;
         }
         
-        public void setCS(short value) {
-            this.AX = value;
+        public static void setCS(short value) {
+            AX = value;
         }
         
-        public void setDS(short value) {
-            this.AX = value;
+        public static void setDS(short value) {
+            AX = value;
         }
         
-        public void setSS(short value) {
-            this.AX = value;
+        public static void setSS(short value) {
+            AX = value;
         }
         
-        public void setIP(short value) {
-            this.AX = value;
+        public static void setIP(short value) {
+            AX = value;
         }
         
-        public void setSP(short value) {
-            this.AX = value;
+        public static void setSP(short value) {
+            AX = value;
         }
         
-        public void setC(byte value) {
-            this.AX = value;
+        public static void setC(byte value) {
+            AX = value;
         }
         
-        public void setMODE(byte value) {
-            this.AX = value;
+        public static void setMODE(byte value) {
+            AX = value;
         }
         
-        public void setCHST0(byte value) {
-            this.AX = value;
+        public static void setCHST0(byte value) {
+            AX = value;
         }
         
-        public void setCHST1(byte value) {
-            this.AX = value;
+        public static void setCHST1(byte value) {
+            AX = value;
         }
         
-        public void setCHST2(byte value) {
-            this.AX = value;
+        public static void setCHST2(byte value) {
+            AX = value;
         }
         
-        public void setSTI(byte value) {
-            this.AX = value;
+        public static void setSTI(byte value) {
+            AX = value;
         }
 }
