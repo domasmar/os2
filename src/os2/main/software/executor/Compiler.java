@@ -309,59 +309,9 @@ public class Compiler {
 	}
 
 
-	public String toString() {
-		// String s = "Ä®vesta komanda: " + this.commandStringInput + "\n";
-		// s += "Komanda: " + this.command + "\n";
-		// String opc = Integer.toBinaryString(this.opc);
-		// if (opc.length() > 8) {
-		// s += "OPC: " + opc.substring(opc.length() - 8) + "b\n";
-		// } else {
-		// s += "OPC: " + opc + "\n";
-		// }
-		// s += "ADRJ: " + Integer.toBinaryString(this.adrJ) + "b\n";
-		// s += "ADRV: " + Integer.toBinaryString(this.adrO) + "b\n";
-		// if (this.register == 1) {
-		// s += "Registras: " + "AX " + "\n";
-		// } else if (this.register == 2) {
-		// s += "Registras: " + "BX " + "\n";
-		// } else if (this.register == 0) {
-		// s += "Registras: " + this.register + "\n";
-		// }
-		return "";
-	}
-	//
-	// public byte getRegister() {
-	// return register;
-	// }
-	//
-	// public void setRegister(byte register) {
-	// this.register = register;
-	// }
-	//
-	// public byte getOpc() {
-	// return opc;
-	// }
-	//
-	// public void setOpc(byte opc) {
-	// this.opc = opc;
-	// }
-	//
-	// public byte getAdrJ() {
-	// return adrJ;
-	// }
-	//
-	// public void setAdrJ(byte adrJ) {
-	// this.adrJ = adrJ;
-	// }
-	//
-	// public byte getAdrO() {
-	// return adrO;
-	// }
-	//
-	// public void setAdrO(byte adrO) {
-	// this.adrO = adrO;
-	// }
-
+//	public String toString() {
+//		return "";
+//	}
 
 	public int getProgramSize() {
 		return programSize;
