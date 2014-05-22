@@ -157,7 +157,7 @@ public class RMMemory {
 		int i;
 		RMMemory.set(start, -1);
 		for (i = 1; i < content.length; i++) {
-			RMMemory.set(i + start, content[i]);
+			RMMemory.set(i + start, content[i-1]);
 		}
 		RMMemory.set(i + start, -1);
 		return start;
