@@ -4,6 +4,7 @@ import os2.main.processes.ProcessQueue;
 import os2.main.processes.imp.StartStop;
 import os2.main.resources.Resource;
 import os2.main.resources.ResourceList;
+import os2.main.resources.ResourceType;
 import os2.main.resources.descriptors.FromGUIDescriptor;
 
 public class Core {
@@ -19,8 +20,14 @@ public class Core {
 
 	public static void startOS() {
 
-		Resource r = new Resource("FROM_GUI");
+		Resource r = new Resource(ResourceType.PROGRAM_FROM_FLASH);
 		FromGUIDescriptor descriptor = new FromGUIDescriptor();
+		descriptor.setFileName("Fibo.ltu");
+		r.setDescriptor(descriptor);
+		Core.resourceList.addResource(r);
+		
+		r = new Resource(ResourceType.PROGRAM_FROM_FLASH);
+		descriptor = new FromGUIDescriptor();
 		descriptor.setFileName("Fibo.ltu");
 		r.setDescriptor(descriptor);
 		Core.resourceList.addResource(r);
@@ -29,12 +36,13 @@ public class Core {
 		while (Core.running) {
 			os2.main.processes.Process process = processQueue.get();
 			if (process != null) {
-				System.out.println(process + " žingsnis: " + process.getStep()
-						+ " prioritetas: " + process.getPriority());
+//				 System.out.println(process + " žingsnis: " +
+//				 process.getStep() + " prioritetas: " +
+//				 process.getPriority());
 				process.nextStep();
 			}
 			try {
-				Thread.sleep(0);
+				Thread.sleep(50);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
