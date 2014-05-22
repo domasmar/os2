@@ -77,125 +77,133 @@ public class CPU {
 	 * steko segmentas
 	 */
 	private static short SS = 0;
-        
-        
-        public static int getAX() {
-            return AX;
-        }
-        
-        public static int getBX() {
-            return BX;
-        }
-	
-        public static int getPTR() {
-            return PTR;
-        }
-        
-        public static int getTIMER() {
-            return TIMER;
-        }
-        
-        public static short getCS() {
-            return CS;
-        }
-        
-        public static short getDS() {
-            return DS;
-        }
-        
-        public static short getSS() {
-            return SS;
-        }
-        
-        public static short getIP() {
-            return IP;
-        }
-        
-        public static short getSP() {
-            return SP;
-        }
-        
-        public static byte getC() {
-            return C;
-        }
-        
-        public static byte getMODE() {
-            return MODE;
-        }
-        
-        public static byte getCHST0() {
-            return CHST0;
-        }
-        
-        public static byte getCHST1() {
-            return CHST1;
-        }
-        
-        public static byte getCHST2() {
-            return CHST2;
-        }
-        
-        public static byte getSTI() {
-            return STI;
-        }
-        
-        public static void setAX(int value) {
-            AX = value;
-        }
-        
-        public static void setBX(int value) {
-            AX = value;
-        }
-	
-        public static void setPTR(int value) {
-            AX = value;
-        }
-        
-        public static void setTIMER(int value) {
-            AX = value;
-        }
-        
-        public static void setCS(short value) {
-            AX = value;
-        }
-        
-        public static void setDS(short value) {
-            AX = value;
-        }
-        
-        public static void setSS(short value) {
-            AX = value;
-        }
-        
-        public static void setIP(short value) {
-            AX = value;
-        }
-        
-        public static void setSP(short value) {
-            AX = value;
-        }
-        
-        public static void setC(byte value) {
-            AX = value;
-        }
-        
-        public static void setMODE(byte value) {
-            AX = value;
-        }
-        
-        public static void setCHST0(byte value) {
-            AX = value;
-        }
-        
-        public static void setCHST1(byte value) {
-            AX = value;
-        }
-        
-        public static void setCHST2(byte value) {
-            AX = value;
-        }
-        
-        public static void setSTI(byte value) {
-            AX = value;
-        }
+
+	public static int getAX() {
+		return AX;
+	}
+
+	public static int getBX() {
+		return BX;
+	}
+
+	public static int getPTR() {
+		return PTR;
+	}
+
+	public static int getTIMER() {
+		return TIMER;
+	}
+
+	public static short getCS() {
+		return CS;
+	}
+
+	public static short getDS() {
+		return DS;
+	}
+
+	public static short getSS() {
+		return SS;
+	}
+
+	public static short getIP() {
+		return IP;
+	}
+
+	public static short getSP() {
+		return SP;
+	}
+
+	public static byte getC() {
+		return C;
+	}
+
+	public static byte getMODE() {
+		return MODE;
+	}
+
+	public static byte getCHST0() {
+		return CHST0;
+	}
+
+	public static byte getCHST1() {
+		return CHST1;
+	}
+
+	public static byte getCHST2() {
+		return CHST2;
+	}
+
+	public static byte getSTI() {
+		return STI;
+	}
+
+	public static byte getPI() {
+		return PI;
+	}
+
+	public static void setAX(int value) {
+		AX = value;
+	}
+
+	public static void setBX(int value) {
+		AX = value;
+	}
+
+	public static void setPTR(int value) {
+		AX = value;
+	}
+
+	public static void setTIMER(int value) {
+		AX = value;
+	}
+
+	public static void setCS(short value) {
+		AX = value;
+	}
+
+	public static void setDS(short value) {
+		AX = value;
+	}
+
+	public static void setSS(short value) {
+		AX = value;
+	}
+
+	public static void setIP(short value) {
+		AX = value;
+	}
+
+	public static void setSP(short value) {
+		AX = value;
+	}
+
+	public static void setC(byte value) {
+		AX = value;
+	}
+
+	public static void setMODE(byte value) {
+		AX = value;
+	}
+
+	public static void setCHST0(byte value) {
+		AX = value;
+	}
+
+	public static void setCHST1(byte value) {
+		AX = value;
+	}
+
+	public static void setCHST2(byte value) {
+		AX = value;
+	}
+
+	public static void setSTI(byte value) {
+		AX = value;
+	}
+
+	public static void setPI(byte value) {
+		PI = value;
+
+	}
 }
