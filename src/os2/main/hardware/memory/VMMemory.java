@@ -25,7 +25,7 @@ public class VMMemory {
 		if (address / 16 <= this.ptr / (16 * 16)) {
 			RMMemory.set(getRealAddress(address), value);
 		} else {
-			CPU.PI = (byte) 1;
+			CPU.setPI((byte)1); 
 			throw new RuntimeException("PI = 1");
 		}
 	}
@@ -34,7 +34,7 @@ public class VMMemory {
 		if (address / 16 <= this.ptr / (16 * 16)) {
 			return RMMemory.get(getRealAddress(address));
 		} else {
-			CPU.PI = (byte) 1;
+			CPU.setPI((byte) 1);
 			throw new RuntimeException("PI = 1");
 		}
 	}
