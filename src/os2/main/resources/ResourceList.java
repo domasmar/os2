@@ -49,6 +49,7 @@ public class ResourceList {
 			Resource resource = iterator.next();
 			if (resource.getName().equalsIgnoreCase(name)) {
 				iterator.remove();
+				return;
 			}
 		}	
 	}
