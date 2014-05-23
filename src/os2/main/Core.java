@@ -28,7 +28,7 @@ public class Core {
 		
 		r = new Resource(ResourceType.PROGRAM_FROM_FLASH);
 		descriptor = new FromGUIDescriptor();
-		descriptor.setFileName("Fibo.ltu");
+		descriptor.setFileName("Fibo_2.ltu");
 		r.setDescriptor(descriptor);
 		Core.resourceList.addResource(r);
 
