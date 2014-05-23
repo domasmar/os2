@@ -1,8 +1,10 @@
 package os2.main.processes.imp;
 
 import os2.main.Core;
+import os2.main.hardware.memory.RMMemory;
 import os2.main.processes.Process;
 import os2.main.resources.Resource;
+import os2.main.resources.descriptors.PrintDescriptor;
 
 /**
  * Šio proceso paskirtis – į išvedimo srautą pasiųsti 
@@ -20,6 +22,10 @@ public class PrintLine extends Process {
 			// Blokuotas, laukiam "Eilutė atmintyje" resurso
 			res = Core.resourceList.searchResource("LINE_IN_MEMORY");
 			if (res != null) {
+				// LAIKINAI
+				PrintDescriptor des = (PrintDescriptor) res.getDescriptor();
+				System.out.println(des.getMessage());
+				// 
 				this.changeStep(1);
 			}
 			else {
