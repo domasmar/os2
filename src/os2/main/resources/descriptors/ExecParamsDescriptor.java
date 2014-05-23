@@ -8,6 +8,7 @@ public class ExecParamsDescriptor implements ResourceDescriptorInterface {
 	
 	private String programName;
 	private int addressInSupMemory;
+	private int endAddressInSupMemory;
 	private ArrayList vars;
 	
 	public String getProgramName() {
@@ -32,6 +33,14 @@ public class ExecParamsDescriptor implements ResourceDescriptorInterface {
 
 	public void setVars(ArrayList vars) {
 		this.vars = vars;
+	}
+
+	public int getEndAddress() {
+		return endAddressInSupMemory;
+	}
+
+	public void setEndAddress(int endAddress) {
+		this.endAddressInSupMemory = endAddress;
 	}
 
 }

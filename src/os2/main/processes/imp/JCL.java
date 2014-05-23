@@ -80,6 +80,7 @@ public class JCL extends Process {
 			ExecParamsDescriptor execDescriptor = new ExecParamsDescriptor();
 			execDescriptor.setProgramName(this.programName);
 			execDescriptor.setAddress(byteCodeStart);
+			execDescriptor.setEndAddress(byteCodeStart + this.byteCode.length + 1);
 			execDescriptor.setVars(this.vars);
 			Resource res = new Resource(ResourceType.EXEC_PAR);
 			res.setDescriptor(execDescriptor);
