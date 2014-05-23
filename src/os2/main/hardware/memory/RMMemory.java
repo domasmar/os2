@@ -174,7 +174,7 @@ public class RMMemory {
 	private static int[] getProgramFromMemory(int start, int end) {
 		int i = 0;
 		int index;
-		int[] program = new int[end - start + 1];
+		int[] program = new int[end - start - 1];
 		for (index = start; index < end; index++) {
 			if (RMMemory.get(index) != -1 && RMMemory.get(index) != 0) {
 				program[i] = RMMemory.get(index);
