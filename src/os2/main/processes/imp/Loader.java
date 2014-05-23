@@ -1,5 +1,7 @@
 package os2.main.processes.imp;
 
+import java.util.ArrayList;
+
 import os2.main.Core;
 import os2.main.hardware.ChannelsDevice.ChannelsDevice;
 import os2.main.hardware.memory.VMMemory;
@@ -20,6 +22,7 @@ public class Loader extends Process {
 	private VMMemory vmm;
 	private int[] programName;
 	private JobGovernor jg;
+	private ArrayList vars;
 
 	@Override
 	public void nextStep() {
@@ -32,6 +35,7 @@ public class Loader extends Process {
 				LoaderPacketDescriptor descriptor = (LoaderPacketDescriptor) res.getDescriptor();
 				this.programName = descriptor.getFilename();
 				this.vmm = descriptor.getMemory();
+				this.vars = descriptor.getVars();
 				this.jg = (JobGovernor) res.getParent();
 				this.changeStep(1);
 			} else {
@@ -58,6 +62,7 @@ public class Loader extends Process {
 			ChannelsDevice.DT = 1; // Tikslas: vartotojo atmintis
 			ChannelsDevice.programName = this.programName;
 			ChannelsDevice.vmm = this.vmm;
+			ChannelsDevice.vars = this.vars;
 			ChannelsDevice.XCHG();
 			this.changeStep(3);
 			break;

@@ -25,6 +25,8 @@ public class ChannelsDevice {
 	public static int DT;
 	public static int[] programName;
 	public static VMMemory vmm;
+	public static ArrayList vars;
+	public static int endAddress;
 	
 	public static boolean XCHG() {
 		/* Kopijavimas iš supervizorinės atminties į išorinę */
@@ -32,14 +34,10 @@ public class ChannelsDevice {
 			ArrayList<Integer> programList = new ArrayList<Integer>();
 			FileSaver programToHDD = null;
 			int[] programArray;
-			int addressInSup = SB + 1;
-			int value;
-			do {
-				value = RMMemory.get(addressInSup);
-				RMMemory.set(addressInSup, 0);	// imam informaciją ir iškart valom atmintį
-				programList.add(value);
-				addressInSup++;
-			} while (RMMemory.get(addressInSup + 1) != -1);
+			programArray = RMMemory.getProgramFromMemory(SB, endAddress);
+			for (int i = 0; i < programArray.length; i++) {
+				System.out.println(programArray[i]);
+			}
 			try {
 				programToHDD = new FileSaver(programName);
 			} catch (Exception e) {
@@ -74,9 +72,10 @@ public class ChannelsDevice {
 				e.printStackTrace();
 			}
 			while (!program.checkIfFileEnd()) {
-				// įrašau programą blokais į VMM
+				
 			}
 		}
+		
 		return true;
 	}
 

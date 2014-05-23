@@ -7,8 +7,8 @@ import os2.main.resources.descriptors.interfaces.ResourceDescriptorInterface;
 public class ExecParamsDescriptor implements ResourceDescriptorInterface {
 	
 	private String programName;
-	private int addressInSupMemory;
-	private int endAddressInSupMemory;
+	private int startAddress;
+	private int endAddress;
 	private ArrayList vars;
 	
 	public String getProgramName() {
@@ -19,28 +19,28 @@ public class ExecParamsDescriptor implements ResourceDescriptorInterface {
 		this.programName = programName;
 	}
 	
-	public int getAddress() {
-		return this.addressInSupMemory;
+	public int getStartAddress() {
+		return this.startAddress;
 	}
 	
-	public void setAddress(int addressInSupMemory) {
-		this.addressInSupMemory = addressInSupMemory;
+	public void setStartAddress(int startAddress) {
+		this.startAddress = startAddress;
 	}
 
+	public int getEndAddress() {
+		return endAddress;
+	}
+
+	public void setEndAddress(int endAddress) {
+		this.endAddress = endAddress;
+	}
+	
 	public ArrayList getVars() {
 		return vars;
 	}
 
 	public void setVars(ArrayList vars) {
 		this.vars = vars;
-	}
-
-	public int getEndAddress() {
-		return endAddressInSupMemory;
-	}
-
-	public void setEndAddress(int endAddress) {
-		this.endAddressInSupMemory = endAddress;
 	}
 
 }

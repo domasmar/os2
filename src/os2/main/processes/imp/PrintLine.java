@@ -4,6 +4,7 @@ import os2.main.Core;
 import os2.main.hardware.memory.RMMemory;
 import os2.main.processes.Process;
 import os2.main.resources.Resource;
+import os2.main.resources.ResourceType;
 import os2.main.resources.descriptors.PrintDescriptor;
 
 /**
@@ -20,7 +21,7 @@ public class PrintLine extends Process {
 		switch (this.step) {
 		case (0):
 			// Blokuotas, laukiam "Eilutė atmintyje" resurso
-			res = Core.resourceList.searchResource("LINE_IN_MEMORY");
+			res = Core.resourceList.searchResource(ResourceType.LI_IN_MEM);
 			if (res != null) {
 				// LAIKINAI
 				PrintDescriptor des = (PrintDescriptor) res.getDescriptor();

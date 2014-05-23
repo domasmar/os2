@@ -22,7 +22,8 @@ import os2.main.resources.descriptors.ProgramInHDDDescriptor;
 public class JobToSwap extends Process {
 	
 	private int[] programName;
-	private int addressInSupMemory;
+	private int startAddress;
+	private int endAddress;
 	private ArrayList vars;
 
 	@Override
@@ -35,7 +36,8 @@ public class JobToSwap extends Process {
 			res = Core.resourceList.searchResource(ResourceType.EXEC_PAR);
 			if (res != null) {
 				ExecParamsDescriptor descriptor = (ExecParamsDescriptor) res.getDescriptor();
-				this.addressInSupMemory = descriptor.getAddress();
+				this.startAddress = descriptor.getStartAddress();
+				this.endAddress = descriptor.getEndAddress();
 				this.vars = descriptor.getVars();
 				try {
 					this.programName = Utilities.getFilenameAsInts(descriptor.getProgramName());
@@ -88,7 +90,8 @@ public class JobToSwap extends Process {
 			// Nustatinėjami kanalų įrenginio registra ir vygdoma komanda "XCHG"
 			ChannelsDevice.ST = 2; // Šaltinis: supervizorinė atmintis
 			ChannelsDevice.DT = 3; // Tikslas: išorinė atmintis
-			ChannelsDevice.SB = this.addressInSupMemory;
+			ChannelsDevice.SB = this.startAddress;
+			ChannelsDevice.endAddress = this.endAddress;
 			ChannelsDevice.programName = this.programName;
 			if (ChannelsDevice.XCHG()) { // įrašoma programą iš supervizorinės atminties į išorinę
 				this.changeStep(4);
