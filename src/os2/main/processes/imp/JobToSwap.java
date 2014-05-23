@@ -41,9 +41,6 @@ public class JobToSwap extends Process {
 				this.vars = descriptor.getVars();
 				try {
 					this.programName = Utilities.getFilenameAsInts(descriptor.getProgramName());
-				} catch (UnsupportedEncodingException e) {
-					System.out.println("Nepavyko paversti programos pavadinimo į integerių masyvą!");
-					e.printStackTrace();
 				} catch (Exception e) {
 					System.out.println("Nepavyko paversti programos pavadinimo į integerių masyvą!");
 					e.printStackTrace();
@@ -90,7 +87,7 @@ public class JobToSwap extends Process {
 			// Nustatinėjami kanalų įrenginio registra ir vygdoma komanda "XCHG"
 			ChannelsDevice.ST = 2; // Šaltinis: supervizorinė atmintis
 			ChannelsDevice.DT = 3; // Tikslas: išorinė atmintis
-			ChannelsDevice.SB = this.startAddress;
+			ChannelsDevice.startAddress = this.startAddress;
 			ChannelsDevice.endAddress = this.endAddress;
 			ChannelsDevice.programName = this.programName;
 			if (ChannelsDevice.XCHG()) { // įrašoma programą iš supervizorinės atminties į išorinę

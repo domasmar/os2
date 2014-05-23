@@ -23,9 +23,12 @@ public class ChannelsDevice {
 	public static int DB;
 	public static int ST;
 	public static int DT;
-	public static int[] programName;
+	
 	public static VMMemory vmm;
 	public static ArrayList vars;
+
+	public static int[] programName;
+	public static int startAddress;
 	public static int endAddress;
 	
 	public static boolean XCHG() {
@@ -33,10 +36,10 @@ public class ChannelsDevice {
 		if (ST == 2 && DT == 3) {
 			ArrayList<Integer> programList = new ArrayList<Integer>();
 			FileSaver programToHDD = null;
-			int[] programArray;
-			programArray = RMMemory.getProgramFromMemory(SB, endAddress);
-			for (int i = 0; i < programArray.length; i++) {
-				System.out.println(programArray[i]);
+			int[] program;
+			program = RMMemory.getIntProgramFromMemory(startAddress, endAddress);
+			for (int i = 0; i < program.length; i++) {
+				System.out.println(program[i]);
 			}
 			try {
 				programToHDD = new FileSaver(programName);
@@ -45,12 +48,8 @@ public class ChannelsDevice {
 				e.printStackTrace();
 				return false;
 			}
-			programArray = new int[programList.size()];
-			for (int i = 0; i < programList.size(); i++) {
-				programArray[i] = programList.get(i);
-			}
-			for (int i = 0; i < programArray.length / 16 + 1; i++) {
-				int[] block = Arrays.copyOfRange(programArray, i * 16, i * 16 + 16);
+			for (int i = 0; i < program.length / 16 + 1; i++) {
+				int[] block = Arrays.copyOfRange(program, i * 16, i * 16 + 16);
 				try {
 					programToHDD.saveBlockOfFile(block);
 				} catch (UnsupportedEncodingException e) {
