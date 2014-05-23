@@ -26,24 +26,26 @@ public class ChannelsDevice {
 	public static int[] programName;
 	public static VMMemory vmm;
 	
-	public static void XCHG() {
+	public static boolean XCHG() {
 		/* Kopijavimas iš supervizorinės atminties į išorinę */
 		if (ST == 2 && DT == 3) {
 			ArrayList<Integer> programList = new ArrayList<Integer>();
 			FileSaver programToHDD = null;
 			int[] programArray;
-			int addressInSup = SB;
+			int addressInSup = SB + 1;
 			int value;
 			do {
 				value = RMMemory.get(addressInSup);
+				RMMemory.set(addressInSup, 0);	// imam informaciją ir iškart valom atmintį
 				programList.add(value);
 				addressInSup++;
-			} while (value != -1);
+			} while (RMMemory.get(addressInSup + 1) != -1);
 			try {
 				programToHDD = new FileSaver(programName);
 			} catch (Exception e) {
-				System.out.println("Nepavyko programos perkelti iš supervizorinės atminties į išorinę!");
+				System.out.println("Nepavyko programos perkelti iš supervizorinės atminties į išorinę! (01)");
 				e.printStackTrace();
+				return false;
 			}
 			programArray = new int[programList.size()];
 			for (int i = 0; i < programList.size(); i++) {
@@ -54,8 +56,9 @@ public class ChannelsDevice {
 				try {
 					programToHDD.saveBlockOfFile(block);
 				} catch (UnsupportedEncodingException e) {
-					System.out.println("Nepavyko programos perkelti iš supervizorinės atminties į išorinę!");
+					System.out.println("Nepavyko programos perkelti iš supervizorinės atminties į išorinę! (02)");
 					e.printStackTrace();
+					return false;
 				}
 			}
 			programToHDD.closeSavedFile();
@@ -74,6 +77,7 @@ public class ChannelsDevice {
 				// įrašau programą blokais į VMM
 			}
 		}
+		return true;
 	}
 
 }

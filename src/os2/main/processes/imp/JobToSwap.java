@@ -7,6 +7,7 @@ import os2.main.hardware.ChannelsDevice.ChannelsDevice;
 import os2.main.hardware.HDD.Utilities;
 import os2.main.processes.Process;
 import os2.main.resources.Resource;
+import os2.main.resources.ResourceType;
 import os2.main.resources.descriptors.ExecParamsDescriptor;
 
 /**
@@ -27,8 +28,8 @@ public class JobToSwap extends Process {
 		switch (this.step) {
 		case (0):
 			// Blokuotas, laukiam resurso "Užduoties vykdymo parametrai
-			// supervizorinėje atmintyje" resurso,
-			res = Core.resourceList.searchResource("EXECUTION_PARAMETERS");
+			// supervizorinėje atmintyje" resurso
+			res = Core.resourceList.searchResource(ResourceType.EXEC_PAR);
 			if (res != null) {
 				ExecParamsDescriptor descriptor = (ExecParamsDescriptor) res.getDescriptor();
 				this.addressInSupMemory = descriptor.getAddress();
@@ -49,7 +50,7 @@ public class JobToSwap extends Process {
 			break;
 		case (1):
 			// Blokuotas laukiant "Išorinė atmintis" resurso
-			res = Core.resourceList.searchResource("HDD");
+			res = Core.resourceList.searchResource(ResourceType.EXT_MEM);
 			if (res != null) {
 				if (res.getParent() == null || res.getParent() == this) {
 					res.setParent(this);
@@ -65,7 +66,7 @@ public class JobToSwap extends Process {
 			break;
 		case (2):
 			// Blokuotas laukiant "Kanalų įrenginys" resurso
-			res = Core.resourceList.searchResource("CHANNELS_DEVICE");
+			res = Core.resourceList.searchResource(ResourceType.CH_DEV);
 			if (res != null) {
 				if (res.getParent() == null || res.getParent() == this) {
 					res.setParent(this);
@@ -85,18 +86,23 @@ public class JobToSwap extends Process {
 			ChannelsDevice.DT = 3; // Tikslas: išorinė atmintis
 			ChannelsDevice.SB = this.addressInSupMemory;
 			ChannelsDevice.programName = this.programName;
-			ChannelsDevice.XCHG(); // įrašoma programą iš supervizorinės atminties į išorinę
-			this.changeStep(4);
+			if (ChannelsDevice.XCHG()) { // įrašoma programą iš supervizorinės atminties į išorinę
+				this.changeStep(4);
+			}
+			else {
+				this.changeStep(3);
+			}
 			break;
 		case (4):
 			// Atlaisvinamas "Kanalo įrenginys" resursas
-			res = Core.resourceList.searchResource("CHANNELS_DEVICE");
+			res = Core.resourceList.searchResource(ResourceType.CH_DEV);
 			res.removeParent();
-			this.changeStep(this.step + 1);
+			this.changeStep(5);
 			break;
 		case (5):
 			// Sukuriamas "Užduotis bugne" resursas
-			Core.resourceList.addResource(new Resource("PROGRAM_IN_HDD"));
+			Core.resourceList.addResource(new Resource(ResourceType.PROGRAM_IN_HDD));
+			Core.resourceList.delete(ResourceType.EXEC_PAR);
 			this.changeStep(0);
 			break;
 		}
