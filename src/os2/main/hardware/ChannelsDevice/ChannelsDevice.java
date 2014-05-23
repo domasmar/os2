@@ -34,7 +34,6 @@ public class ChannelsDevice {
 	public static boolean XCHG() {
 		/* Kopijavimas iš supervizorinės atminties į išorinę */
 		if (ST == 2 && DT == 3) {
-			ArrayList<Integer> programList = new ArrayList<Integer>();
 			FileSaver programToHDD = null;
 			int[] program;
 			program = RMMemory.getIntProgramFromMemory(startAddress, endAddress);
@@ -44,7 +43,7 @@ public class ChannelsDevice {
 			try {
 				programToHDD = new FileSaver(programName);
 			} catch (Exception e) {
-				System.out.println("Nepavyko programos perkelti iš supervizorinės atminties į išorinę! (01)");
+				System.out.println("Nepavyko išskirti vietos išorinėje atminties naujai programai!");
 				e.printStackTrace();
 				return false;
 			}
@@ -53,7 +52,7 @@ public class ChannelsDevice {
 				try {
 					programToHDD.saveBlockOfFile(block);
 				} catch (UnsupportedEncodingException e) {
-					System.out.println("Nepavyko programos perkelti iš supervizorinės atminties į išorinę! (02)");
+					System.out.println("Nepavyko programos perkelti iš supervizorinės atminties į išorinę!");
 					e.printStackTrace();
 					return false;
 				}
@@ -67,7 +66,7 @@ public class ChannelsDevice {
 			try {
 				program = new FileLoader(programName);
 			} catch (Exception e) {
-				System.out.println("Problema, skaitant programą iš išorinės atminties!");
+				System.out.println("Problema skaitant programą iš išorinės atminties!");
 				e.printStackTrace();
 			}
 			while (!program.checkIfFileEnd()) {
