@@ -7,9 +7,11 @@ import os2.main.hardware.memory.RMMemory;
 import os2.main.processes.Process;
 import os2.main.resources.Resource;
 import os2.main.resources.ResourceType;
+import os2.main.resources.descriptors.ExecParamsDescriptor;
 import os2.main.resources.descriptors.PrintDescriptor;
 import os2.main.resources.descriptors.ProgramInSupervisorDescriptor;
 import os2.main.software.commandsConverter.CommandsConverter;
+import os2.main.software.commandsConverter.Variable;
 import os2.main.software.executor.Compiler;
 
 /**
@@ -23,6 +25,10 @@ import os2.main.software.executor.Compiler;
 public class JCL extends Process {
 
 	// private Resource programResource;
+
+	private ArrayList vars;
+	private int[] byteCode;
+	private String programName;
 
 	@Override
 	public void nextStep() {
@@ -38,48 +44,46 @@ public class JCL extends Process {
 		case 1:
 			// Tikrinamas programos validumas
 			// Jei programa nekorektiška, gražiname atitinkamą klaidos pranešimą
-			Resource r = Core.resourceList.searchResource(ResourceType.PROGRAM_IN_SUPERVISOR);
+			Resource r = Core.resourceList
+					.searchResource(ResourceType.PROGRAM_IN_SUPERVISOR);
 			r.setParent(this);
-			ProgramInSupervisorDescriptor descriptor = (ProgramInSupervisorDescriptor) r.getDescriptor();
-			Core.resourceList.deleteChildResource(this, ResourceType.PROGRAM_IN_SUPERVISOR);
-			byte[] program = new byte[descriptor.getProgramEnd()
-					- descriptor.getProgramBegin() + 1];
-			int i = 0;
-			//System.out.println(descriptor.getProgramBegin());
-			for (int index = descriptor.getProgramBegin(); index < descriptor
-					.getProgramEnd(); index++) {
-				if (RMMemory.get(index) != -1 && RMMemory.get(index) != 0) {
-					program[i] = (byte) RMMemory.get(index);
-					i++;
-				}
-				RMMemory.set(index, 0);				
-			}
+			ProgramInSupervisorDescriptor descriptor = (ProgramInSupervisorDescriptor) r
+					.getDescriptor();
+			this.programName = descriptor.getProgramName();
+			Core.resourceList.deleteChildResource(this,
+					ResourceType.PROGRAM_IN_SUPERVISOR);
+
+			byte[] program = RMMemory.getByteProgramFromMemory(
+					descriptor.getProgramBegin(), descriptor.getProgramEnd());
 
 			String programCode = new String(program);
-			System.out.println(programCode);
 			try {
 				CommandsConverter cc = new CommandsConverter(programCode);
 				String[] commands = cc.getCommands();
-				ArrayList vars = cc.getVariables();
-				
+				this.vars = cc.getVariables();
 				Compiler compiler = new Compiler();
-				int[] byteCode = compiler.compile(commands);
+				this.byteCode = compiler.compile(commands);
 				this.changeStep(2);
 			} catch (Exception e) {
 				Resource resource = new Resource(ResourceType.LI_IN_MEM);
 				PrintDescriptor printDescriptor = new PrintDescriptor();
-				System.out.println(e.getMessage());
 				printDescriptor.setMessage(e.getMessage());
 				resource.setDescriptor(printDescriptor);
 				Core.resourceList.addResource(resource);
 				this.changeStep(0);
 			}
-
 			break;
 		case 2:
 			// Sukuriamas resursas
 			// "Užduoties vygdymo parametrai supervizorinėje atmintyje"
-			
+			int byteCodeStart = RMMemory.loadProgramToMemory(this.byteCode);
+			ExecParamsDescriptor execDescriptor = new ExecParamsDescriptor();
+			execDescriptor.setProgramName(this.programName);
+			execDescriptor.setAddress(byteCodeStart);
+			execDescriptor.setVars(this.vars);
+			Resource res = new Resource(ResourceType.EXEC_PAR);
+			res.setDescriptor(execDescriptor);
+			Core.resourceList.addResource(res);
 			this.changeStep(0);
 			break;
 		}
