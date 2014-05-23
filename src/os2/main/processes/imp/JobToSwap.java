@@ -1,6 +1,7 @@
 package os2.main.processes.imp;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 import os2.main.Core;
 import os2.main.hardware.ChannelsDevice.ChannelsDevice;
@@ -9,6 +10,7 @@ import os2.main.processes.Process;
 import os2.main.resources.Resource;
 import os2.main.resources.ResourceType;
 import os2.main.resources.descriptors.ExecParamsDescriptor;
+import os2.main.resources.descriptors.ProgramInHDDDescriptor;
 
 /**
  * Šio proceso paskirtis – perkelti užduoties programos blokus iš supervizorinės atminties į
@@ -21,6 +23,7 @@ public class JobToSwap extends Process {
 	
 	private int[] programName;
 	private int addressInSupMemory;
+	private ArrayList vars;
 
 	@Override
 	public void nextStep() {
@@ -33,6 +36,7 @@ public class JobToSwap extends Process {
 			if (res != null) {
 				ExecParamsDescriptor descriptor = (ExecParamsDescriptor) res.getDescriptor();
 				this.addressInSupMemory = descriptor.getAddress();
+				this.vars = descriptor.getVars();
 				try {
 					this.programName = Utilities.getFilenameAsInts(descriptor.getProgramName());
 				} catch (UnsupportedEncodingException e) {
@@ -101,7 +105,12 @@ public class JobToSwap extends Process {
 			break;
 		case (5):
 			// Sukuriamas "Užduotis bugne" resursas
-			Core.resourceList.addResource(new Resource(ResourceType.PROGRAM_IN_HDD));
+			ProgramInHDDDescriptor descriptor = new ProgramInHDDDescriptor();
+			descriptor.setProgramName(this.programName);
+			descriptor.setVars(this.vars);
+			res = new Resource(ResourceType.PROGRAM_IN_HDD);
+			res.setDescriptor(descriptor);
+			Core.resourceList.addResource(res);
 			Core.resourceList.delete(ResourceType.EXEC_PAR);
 			this.changeStep(0);
 			break;
