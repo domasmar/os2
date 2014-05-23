@@ -156,11 +156,43 @@ public class RMMemory {
 
 		int i;
 		RMMemory.set(start, -1);
-		for (i = 1; i < content.length; i++) {
-			RMMemory.set(i + start, content[i-1]);
+		for (i = 1; i < content.length + 1; i++) {
+			RMMemory.set(i + start, content[i - 1]);
 		}
 		RMMemory.set(i + start, -1);
 		return start;
+	}
+
+	private static byte[] integersToBytes(int[] values) {
+		byte[] program = new byte[values.length];
+		for (int i = 0; i < values.length; ++i) {
+			program[i] = (byte) values[i];
+		}
+		return program;
+	}
+
+	private static int[] getProgramFromMemory(int start, int end) {
+		int i = 0;
+		int index;
+		int[] program = new int[end - start + 1];
+		for (index = start; index < end; index++) {
+			if (RMMemory.get(index) != -1 && RMMemory.get(index) != 0) {
+				program[i] = RMMemory.get(index);
+				i++;
+			}
+			RMMemory.set(index, 0);
+		}
+		RMMemory.set(index, 0);
+		return program;
+	}
+
+	public static int[] getIntProgramFromMemory(int start, int end) {
+		return getProgramFromMemory(start, end);
+	}
+
+	public static byte[] getByteProgramFromMemory(int start, int end) {
+		int[] program = getProgramFromMemory(start, end);
+		return integersToBytes(program);
 	}
 
 }
