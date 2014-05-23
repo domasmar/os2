@@ -1,6 +1,6 @@
 package os2.main.software.executor;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Compiler {
 
@@ -45,8 +45,14 @@ public class Compiler {
 		}
 
 		this.setProgramSize(commandNr);
-
-		return commandsIntArray;
+		int firstZero = MAX_CS_SIZE;
+		for (int i = 0; i < commandsIntArray.length; i++) {
+			if (commandsIntArray[i] == 0) {
+				firstZero = i;
+				break;
+			}
+		}
+		return Arrays.copyOf(commandsIntArray, firstZero);
 	}
 
 
