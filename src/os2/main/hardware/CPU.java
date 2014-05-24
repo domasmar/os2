@@ -68,7 +68,7 @@ public class CPU {
 	/**
 	 * timeris
 	 */
-	private static int TIMER = 0;
+	private static int TIMER = 9999999;
 	/**
 	 * duomenų segmentas
 	 */
