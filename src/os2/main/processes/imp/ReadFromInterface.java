@@ -34,7 +34,8 @@ public class ReadFromInterface extends Process {
 		switch (this.step) {
 		case (0):
 			// Blokuojam kol sulaukiam resurso "Iš vartojo sąsajos
-			res = Core.resourceList.searchResource(ResourceType.PROGRAM_FROM_FLASH);
+			res = Core.resourceList
+					.searchResource(ResourceType.PROGRAM_FROM_FLASH);
 			if (res != null) {
 				FromGUIDescriptor descriptor = (FromGUIDescriptor) res
 						.getDescriptor();
@@ -58,10 +59,9 @@ public class ReadFromInterface extends Process {
 			} catch (IOException e) {
 				e.printStackTrace();
 				Resource r = new Resource(ResourceType.LI_IN_MEM);
-				PrintDescriptor printDescriptor = new PrintDescriptor();
-				printDescriptor.setMessage("Klaida: Failas: " + this.fileName
-						+ " neegzistuoja arba jo nepavyko atidaryti");
-				r.setDescriptor(printDescriptor);
+				r.setDescriptor(RMMemory.loadStringToMemory("Klaida: Failas: "
+						+ this.fileName
+						+ " neegzistuoja arba jo nepavyko atidaryti"));
 				Core.resourceList.addResource(r);
 				this.changeStep(0);
 			}
@@ -85,19 +85,19 @@ public class ReadFromInterface extends Process {
 			if (res != null) {
 				if (res.getParent() == this) {
 					res.removeParent();
-					this.programStart = RMMemory.loadProgramToMemory(this.content);
-					
+					this.programStart = RMMemory
+							.loadProgramToMemory(this.content);
+
 					if (programStart > 0) {
-						this.programEnd = this.programStart + this.content.length + 1;
+						this.programEnd = this.programStart
+								+ this.content.length + 1;
 						this.changeStep(this.step + 1);
 					} else {
 						Resource r = new Resource(ResourceType.LI_IN_MEM);
-						PrintDescriptor printDescriptor = new PrintDescriptor();
-						printDescriptor
-								.setMessage("Klaida: Failas: "
+						r.setDescriptor(RMMemory
+								.loadStringToMemory("Klaida: Failas: "
 										+ this.fileName
-										+ " negali būti perkeltas į supervizorinę atmintį, nes yra per didelis");
-						r.setDescriptor(printDescriptor);
+										+ " negali būti perkeltas į supervizorinę atmintį, nes yra per didelis"));
 						Core.resourceList.addResource(r);
 						this.changeStep(0);
 					}

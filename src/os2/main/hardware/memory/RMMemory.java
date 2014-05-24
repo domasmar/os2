@@ -2,6 +2,8 @@ package os2.main.hardware.memory;
 
 import java.util.Random;
 
+import os2.main.resources.descriptors.PrintDescriptor;
+
 /**
  * Realios mašinos atmintis. Vartotojo atmintis [0.. 3071] Supervizorinė
  * atmintis [3072..4098] Puslapių lentelė prasideda nuo 3072 iki 3263.
@@ -142,7 +144,23 @@ public class RMMemory {
 				return index - size + 2;
 			}
 		}
-		throw new RuntimeException("Nėra vietos");
+		throw new RuntimeException("No memory space!");
+	}
+	
+	public static PrintDescriptor loadStringToMemory(String str) {
+		byte[] content = str.getBytes();
+		int[] intContent = new int[content.length];
+		
+		for (int i = 0; i < content.length; i++) {
+			intContent[i] = (new Byte(content[i])).intValue();
+		}
+		
+		int start = loadProgramToMemory(intContent);
+		
+		PrintDescriptor pd = new PrintDescriptor();
+		pd.setStartAddress(start);
+		pd.setEndAddress(start + intContent.length + 1);
+		return pd;
 	}
 
 	public static int loadProgramToMemory(int[] content) {

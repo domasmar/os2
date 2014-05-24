@@ -77,9 +77,7 @@ public class JCL extends Process {
 				this.changeStep(2);
 			} catch (Exception e) {
 				Resource resource = new Resource(ResourceType.LI_IN_MEM);
-				PrintDescriptor printDescriptor = new PrintDescriptor();
-				printDescriptor.setMessage(e.getMessage());
-				resource.setDescriptor(printDescriptor);
+				resource.setDescriptor(RMMemory.loadStringToMemory(e.getMessage()));
 				Core.resourceList.addResource(resource);
 				this.changeStep(0);
 			}
