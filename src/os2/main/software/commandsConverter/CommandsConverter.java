@@ -57,7 +57,10 @@ public class CommandsConverter {
 	private void saveSourceCode(String sourceCode) {
 		String tidySourceCode = sourceCode.replaceAll("(?m)^[ \t]*\r?\n", "")
 				.trim().toLowerCase();
-		this.sourceCode = tidySourceCode.split("\r\n");
+		this.sourceCode = tidySourceCode.split("\n");
+		for (int i = 0; i < this.sourceCode.length; i++) {
+			this.sourceCode[i] = this.sourceCode[i].trim();
+		}
 	}
 
 	public String[] getCommands() {
