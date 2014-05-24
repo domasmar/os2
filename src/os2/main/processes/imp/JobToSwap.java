@@ -1,7 +1,5 @@
 package os2.main.processes.imp;
 
-import java.util.ArrayList;
-
 import os2.main.Core;
 import os2.main.hardware.ChannelsDevice.ChannelsDevice;
 import os2.main.hardware.HDD.Utilities;
@@ -23,7 +21,6 @@ public class JobToSwap extends Process {
 	private int[] programName;
 	private int startAddress;
 	private int endAddress;
-	private ArrayList vars;
 
 	@Override
 	public void nextStep() {
@@ -37,7 +34,6 @@ public class JobToSwap extends Process {
 				ExecParamsDescriptor descriptor = (ExecParamsDescriptor) res.getDescriptor();
 				this.startAddress = descriptor.getStartAddress();
 				this.endAddress = descriptor.getEndAddress();
-				this.vars = descriptor.getVars();
 				try {
 					this.programName = Utilities.getFilenameAsInts(descriptor.getProgramName());
 				} catch (Exception e) {
@@ -106,7 +102,6 @@ public class JobToSwap extends Process {
 			// Sukuriamas "Užduotis bugne" resursas
 			ProgramInHDDDescriptor descriptor = new ProgramInHDDDescriptor();
 			descriptor.setProgramName(this.programName);
-			descriptor.setVars(this.vars);
 			res = new Resource(ResourceType.PROGRAM_IN_HDD);
 			res.setDescriptor(descriptor);
 			Core.resourceList.addResource(res);
