@@ -8,6 +8,8 @@ public class VMMemory {
 	private int ptr = 0;
 	private int pageNumber = 0;
 
+	private static final int REGISTER_SPACE = 20;
+
 	public VMMemory(int ptr, int pageNumber) {
 		this.ptr = ptr;
 		this.pageNumber = pageNumber;
@@ -38,7 +40,7 @@ public class VMMemory {
 			throw new RuntimeException("PI = 1");
 		}
 	}
-	
+
 	public void loadCPUState() {
 		int i = 0;
 		CPU.setAX(this.get(i++));
@@ -46,22 +48,22 @@ public class VMMemory {
 		CPU.setPTR(this.get(i++));
 		CPU.setC((byte) this.get(i++));
 		CPU.setCHST0((byte) this.get(i++));
-		CPU.setCHST1((byte)this.get(i++));
-		CPU.setCHST2((byte)this.get(i++));
+		CPU.setCHST1((byte) this.get(i++));
+		CPU.setCHST2((byte) this.get(i++));
 		CPU.setCS((short) this.get(i++));
-		CPU.setDS((short)this.get(i++));
-		CPU.setEND((byte)this.get(i++));
-		CPU.setIOI((byte)this.get(i++));
-		CPU.setIP((byte)this.get(i++));
-		CPU.setMODE((byte)this.get(i++));
-		CPU.setPI((byte)this.get(i++));
-		CPU.setSI((byte)this.get(i++));
-		CPU.setSP((byte)this.get(i++));
-		CPU.setSS((byte)this.get(i++));
-		CPU.setSTI((byte)this.get(i++));
-		CPU.setTI((byte)this.get(i++));
+		CPU.setDS((short) this.get(i++));
+		CPU.setEND((byte) this.get(i++));
+		CPU.setIOI((byte) this.get(i++));
+		CPU.setIP((byte) this.get(i++));
+		CPU.setMODE((byte) this.get(i++));
+		CPU.setPI((byte) this.get(i++));
+		CPU.setSI((byte) this.get(i++));
+		CPU.setSP((byte) this.get(i++));
+		CPU.setSS((byte) this.get(i++));
+		CPU.setSTI((byte) this.get(i++));
+		CPU.setTI((byte) this.get(i++));
 	}
-	
+
 	public void saveCPUState() {
 		int i = 0;
 		this.set(i++, CPU.getAX());
@@ -86,8 +88,6 @@ public class VMMemory {
 	}
 
 	public void loadProgram(int[] program) {
-		// Pirmi 16 int'u registrai
-		// DS, SS, CS
 		int varsSeparatorIndex = 0;
 		for (int i = 0; i < program.length; i++) {
 			if (program[i] == RMMemory.VARS_SEPARATOR) {
@@ -95,13 +95,21 @@ public class VMMemory {
 			}
 		}
 		int varsSize = varsSeparatorIndex;
-		int programSize = program.length - varsSeparatorIndex - 1;
+		int programSize = program.length - varsSeparatorIndex
+				- (varsSize > 0 ? 1 : 0);
 
-		int blocksForVars = varsSize / RMMemory.BLOCK_SIZE
-				+ (varsSize % RMMemory.BLOCK_SIZE > 0 ? 1 : 0);
-		int blocksForProgram = programSize / RMMemory.BLOCK_SIZE
-				+ (programSize % RMMemory.BLOCK_SIZE > 0 ? 1 : 0);
+		int i;
+		for (i = 0; i < varsSize; i++) {
+			this.set(REGISTER_SPACE + i, program[i]);
+		}
+		CPU.setDS((short) REGISTER_SPACE);
+		CPU.setSS((short) (REGISTER_SPACE + i));
 
+		for (i = 0; i < programSize; i++) {
+			this.set(VIRTUAL_MEMORY_SIZE - i - 1, program[program.length - 1
+					- i]);
+		}
+		CPU.setCS((short) (VIRTUAL_MEMORY_SIZE - i));
 	}
 
 	public void destroy() {
@@ -109,6 +117,14 @@ public class VMMemory {
 			this.set(i, 0);
 		}
 		RMMemory.clearPage(this.pageNumber);
+	}
+
+	public String toString() {
+		String r = "";
+		for (int i = 0; i < VIRTUAL_MEMORY_SIZE; i++) {
+			r += i + ": " + this.get(i) + " \n";
+		}
+		return r;
 	}
 
 }
