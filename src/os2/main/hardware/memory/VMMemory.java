@@ -12,6 +12,8 @@ public class VMMemory {
 
 	public VMMemory(int ptr, int pageNumber) {
 		this.ptr = ptr;
+		CPU.setPTR(this.ptr);
+		this.saveCPUState();
 		this.pageNumber = pageNumber;
 	}
 
@@ -110,6 +112,7 @@ public class VMMemory {
 					- i]);
 		}
 		CPU.setCS((short) (VIRTUAL_MEMORY_SIZE - i));
+		this.saveCPUState();
 	}
 
 	public void destroy() {
