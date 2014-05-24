@@ -40,6 +40,10 @@ public class CPU {
 	/**
 	 * išvedimo, įvedimo pertraukimas
 	 */
+        private static byte END = 0;
+        /**
+	 * programos pabaigos pertraukimas
+	 */
 	private static byte IOI = 0;
 	/**
 	 * timerio pertraukimas
@@ -117,6 +121,10 @@ public class CPU {
 	public static byte getC() {
 		return C;
 	}
+        
+        public static byte getEND() {
+		return END;
+	}
 
 	public static byte getMODE() {
 		return MODE;
@@ -137,6 +145,18 @@ public class CPU {
 	public static byte getSTI() {
 		return STI;
 	}
+        
+        public static byte getSI() {
+		return SI;
+	}
+        
+        public static byte getIOI() {
+		return IOI;
+	}
+        
+        public static byte getTI() {
+		return TI;
+	}
 
 	public static byte getPI() {
 		return PI;
@@ -147,63 +167,78 @@ public class CPU {
 	}
 
 	public static void setBX(int value) {
-		AX = value;
+		BX = value;
 	}
 
 	public static void setPTR(int value) {
-		AX = value;
+		PTR = value;
 	}
 
 	public static void setTIMER(int value) {
-		AX = value;
+		TIMER = value;
 	}
 
 	public static void setCS(short value) {
-		AX = value;
+		CS = value;
 	}
 
 	public static void setDS(short value) {
-		AX = value;
+		DS = value;
 	}
 
 	public static void setSS(short value) {
-		AX = value;
+		SS = value;
 	}
 
 	public static void setIP(short value) {
-		AX = value;
+		IP = value;
 	}
 
 	public static void setSP(short value) {
-		AX = value;
+		SP = value;
 	}
 
 	public static void setC(byte value) {
-		AX = value;
+		C = value;
 	}
 
 	public static void setMODE(byte value) {
-		AX = value;
+		MODE = value;
 	}
 
 	public static void setCHST0(byte value) {
-		AX = value;
+		CHST0 = value;
 	}
 
 	public static void setCHST1(byte value) {
-		AX = value;
+		CHST1 = value;
 	}
 
 	public static void setCHST2(byte value) {
-		AX = value;
+		CHST2 = value;
 	}
 
 	public static void setSTI(byte value) {
-		AX = value;
+		STI = value;
+	}
+        
+        public static void setEND(byte value) {
+		END = value;
+	}
+        
+        public static void setSI(byte value) {
+		SI = value;
 	}
 
 	public static void setPI(byte value) {
 		PI = value;
-
+	}
+        
+        public static void setTI(byte value) {
+		TI = value;
+	}
+        
+        public static void setIOI(byte value) {
+		IOI = value;
 	}
 }

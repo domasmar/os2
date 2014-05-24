@@ -5,6 +5,7 @@ package os2.main.resources;
  * @author Arturas
  */
 public class ResourceType {
+    
     public static final String VIRT_MEM = "VIRTUAL_MEMORY";
     public static final String SUP_MEM = "SUPERVISOR_MEMORY";
     public static final String EXT_MEM = "EXTERNAL_MEMORY";
@@ -21,5 +22,5 @@ public class ResourceType {
     public static final String END = "END_OF_OPERATING_SYSTEM";
     public static final String PROGRAM_IN_SUPERVISOR = "PROGRAM_IN_SUPERVISOR";
     public static final String PROGRAM_FROM_FLASH = "PROGRAM_FROM_FLASH";
-	public static final String PROGRAM_IN_HDD = "PROGRAM_IN_HDD";
+    public static final String PROGRAM_IN_HDD = "PROGRAM_IN_HDD";
 }

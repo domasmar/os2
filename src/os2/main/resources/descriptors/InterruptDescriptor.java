@@ -9,10 +9,11 @@ import os2.main.resources.descriptors.interfaces.ResourceDescriptorInterface;
 public class InterruptDescriptor implements ResourceDescriptorInterface {
 
     public enum Type {
-        IO, END
+        IOI, END, PI, SI, TI, STI
     }
 
     private Type type;
+    private byte value;
 
     public Type getType() {
         return type;
@@ -20,6 +21,14 @@ public class InterruptDescriptor implements ResourceDescriptorInterface {
 
     public void setType(Type type) {
         this.type = type;
+    }
+    
+    public byte getValue() {
+        return this.value;
+    }
+    
+     public void setValue(byte value ) {
+        this.value = value;
     }
 
 }
