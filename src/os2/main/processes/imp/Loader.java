@@ -72,12 +72,12 @@ public class Loader extends Process {
 		case (4):
 			// Sukuriamas "Iš loader" resursas, skirtas JobGovernor procesui
 			// sukūrusiam gautąjį "Pakrovimo paketo" resursą
-			res = new Resource("FROM_LOADER");
+			res = new Resource(ResourceType.PACK_FROM_LOAD);
 			res.setParent(this.jg);
 			FromLoaderDescriptor descriptor = new FromLoaderDescriptor();
 			descriptor.setMessage("Programa " + this.programName + " iš išorinės atminties perkelta į vartotojo");
 			res.setDescriptor(descriptor);
-			Core.resourceList.addResource(new Resource("FROM_LOADER"));
+			Core.resourceList.addResource(res);
 			Core.resourceList.deleteChildResource(this, ResourceType.LOAD_PACK);
 			this.changeStep(0);
 			break;
