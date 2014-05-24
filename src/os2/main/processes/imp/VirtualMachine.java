@@ -81,6 +81,7 @@ public class VirtualMachine extends Process {
                     intDes = (InterruptDescriptor) intFixed.getDescriptor();
                     if (intDes.getFixed() == true) {
                         this.changeStep(1);
+                        Core.resourceList.deleteByInstance(intFixed);
                     } else {
                         this.changeStep(2);
                     }

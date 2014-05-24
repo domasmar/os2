@@ -28,6 +28,7 @@ public class JobGovernor extends Process {
     private Resource progInHddRes = null;
     private Resource memRes = null;
     private Resource intRes = null;
+    private Resource fromLoader = null;
 
     public JobGovernor(Resource progInHdd) {
         this.progInHddRes = progInHdd;
@@ -82,7 +83,7 @@ public class JobGovernor extends Process {
              pridedame krov.paket.resurs. į sąrašą   
              */
             case (2):
-                Resource fromLoader = Core.resourceList.searchChildResource(this, ResourceType.PACK_FROM_LOAD);
+                fromLoader = Core.resourceList.searchChildResource(this, ResourceType.PACK_FROM_LOAD);
                 if (fromLoader != null) {
                     this.changeStep(3);
                 } else {
@@ -124,6 +125,8 @@ public class JobGovernor extends Process {
                 } else {
                     Core.processQueue.delete(vmProc.getPid());
                     progInHddRes.setParent(null);
+                    Core.resourceList.deleteByInstance(memRes);
+                    Core.resourceList.deleteByInstance(fromLoader);
                     this.changeStep(6);
                 }
                 break;
