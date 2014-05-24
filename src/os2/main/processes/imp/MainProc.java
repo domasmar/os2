@@ -24,7 +24,7 @@ public class MainProc extends Process {
 		switch (this.step) {
 		case (0):
 			// Blokuojam, laukiam resurso "Užduotis būge" resurso
-			res = Core.resourceList.searchResource(ResourceType.PROGRAM_IN_HDD);
+			res = Core.resourceList.searchChildResource(null, ResourceType.PROGRAM_IN_HDD);
 			if (res != null) {
 				this.changeStep(1);
 			} else {
@@ -34,7 +34,7 @@ public class MainProc extends Process {
 		case (1):
 			// Tikrinam vygdymo laiką
 			// step = time > 0 ? 2 : 3
-			res = Core.resourceList.searchResource(ResourceType.PROGRAM_IN_HDD);
+			res = Core.resourceList.searchChildResource(null, ResourceType.PROGRAM_IN_HDD);
 			res.setParent(this);
 			des = (ProgramInHDDDescriptor) res.getDescriptor();
 			if (des.isFromJobToSwap()) {
