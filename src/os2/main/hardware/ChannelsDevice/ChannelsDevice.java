@@ -79,6 +79,9 @@ public class ChannelsDevice {
 				programBlock = programInHDD.getBlockOfFile();
 				program = concat(program, programBlock);
 			}
+			for (int i = 0; i < program.length; i++) {
+				System.out.println(program[i]);
+			}
 			vmm.loadProgram(program);
 		}
 		
