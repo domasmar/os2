@@ -1,6 +1,7 @@
 package os2.main.processes;
 
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.PriorityQueue;
 
 public class ProcessQueue {
@@ -25,14 +26,22 @@ public class ProcessQueue {
 	
 	public Process get() {		
 		Process p = this.queue.poll();
-		//p.setPriority(p.getPriority() - 1);
 		this.queue.add(p);
 		return p;
 	}
 
 	public void deleteAll() {
 		// TODO Auto-generated method stub
-		
+	}
+	
+	public void delete(int pid) {
+		Iterator iterator = queue.iterator();
+		while (iterator.hasNext()) {
+			Process proc = (Process) iterator.next();
+			if (proc.getPid() == pid) {
+				iterator.remove();				
+			}
+		}
 	}
 	
 }

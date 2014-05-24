@@ -60,6 +60,18 @@ public class ResourceList {
 			Resource resource = iterator.next();
 			if (resource.getName().equalsIgnoreCase(name) && resource.getParent() == process) {
 				iterator.remove();
+				return;
+			}
+		}
+	}
+	
+	public void deleteByInstance(Resource res) {
+		Iterator<Resource> iterator = this.list.iterator();
+		while (iterator.hasNext()) {
+			Resource resource = iterator.next();
+			if (resource == res) {
+				iterator.remove();
+				return;
 			}
 		}
 	}
