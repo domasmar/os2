@@ -31,10 +31,10 @@ public class Loader extends Process {
 			res = Core.resourceList.searchResource(ResourceType.LOAD_PACK);
 			if (res != null) {
 				LoaderPacketDescriptor descriptor = (LoaderPacketDescriptor) res.getDescriptor();
+				this.jg = (JobGovernor) res.getParent();
 				res.setParent(this);
 				this.programName = descriptor.getFilename();
 				this.vmm = descriptor.getMemory();
-				this.jg = (JobGovernor) res.getParent();
 				this.changeStep(1);
 			} else {
 				this.changeStep(0);
