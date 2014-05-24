@@ -118,6 +118,27 @@ public class VMMemory {
 		}
 		RMMemory.clearPage(this.pageNumber);
 	}
+	
+	public void push(int value) {
+		int sp = CPU.getSP();
+		if (sp + CPU.getSS() + 1 >= CPU.getCS()) {
+			CPU.setSI((byte) 1);
+			throw new RuntimeException("Stack overflow");
+		}
+		this.set(CPU.getSS() + sp + 1, value);
+		CPU.setSP((short) (sp + 1));
+	}
+	
+	public int pop() {
+		int sp = CPU.getSP();
+		if (sp - 1 < 0) {
+			CPU.setSI((byte) 1);
+			throw new RuntimeException("Stack overflow");
+		}
+		int value = this.get(CPU.getSS() + sp);
+		CPU.setSP((short) (sp - 1));
+		return value;
+	}
 
 	public String toString() {
 		String r = "";
