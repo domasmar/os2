@@ -75,8 +75,9 @@ public class ChannelsDevice {
 		
 		/* Kopijavimas iš supervizorinės atminties į išvedimo srautą */
 		if (ST == 2 && DT == 4) {
-			int[] messageInts;
-			messageInts = RMMemory.getIntProgramFromMemory(startAddress, endAddress);
+			byte[] messageInts;
+			messageInts = RMMemory.getByteProgramFromMemory(startAddress, endAddress);
+			System.out.println(new String(messageInts));
 		}
 		
 		return true;
