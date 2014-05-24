@@ -32,6 +32,7 @@ public class JobToSwap extends Process {
 			res = Core.resourceList.searchResource(ResourceType.EXEC_PAR);
 			if (res != null) {
 				ExecParamsDescriptor descriptor = (ExecParamsDescriptor) res.getDescriptor();
+				res.setParent(this);
 				this.startAddress = descriptor.getStartAddress();
 				this.endAddress = descriptor.getEndAddress();
 				try {
@@ -105,7 +106,7 @@ public class JobToSwap extends Process {
 			res = new Resource(ResourceType.PROGRAM_IN_HDD);
 			res.setDescriptor(descriptor);
 			Core.resourceList.addResource(res);
-			Core.resourceList.delete(ResourceType.EXEC_PAR);
+			Core.resourceList.deleteChildResource(this, ResourceType.EXEC_PAR);
 			this.changeStep(0);
 			break;
 		}
