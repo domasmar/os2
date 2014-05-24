@@ -1,7 +1,5 @@
 package os2.main.resources.descriptors;
 
-import java.util.ArrayList;
-
 import os2.main.resources.descriptors.interfaces.ResourceDescriptorInterface;
 
 public class ExecParamsDescriptor implements ResourceDescriptorInterface {
@@ -9,8 +7,7 @@ public class ExecParamsDescriptor implements ResourceDescriptorInterface {
 	private String programName;
 	private int startAddress;
 	private int endAddress;
-	private ArrayList vars;
-	
+
 	public String getProgramName() {
 		return this.programName;
 	}
@@ -33,14 +30,6 @@ public class ExecParamsDescriptor implements ResourceDescriptorInterface {
 
 	public void setEndAddress(int endAddress) {
 		this.endAddress = endAddress;
-	}
-	
-	public ArrayList getVars() {
-		return vars;
-	}
-
-	public void setVars(ArrayList vars) {
-		this.vars = vars;
 	}
 
 }

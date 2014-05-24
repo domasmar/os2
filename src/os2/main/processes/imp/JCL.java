@@ -1,6 +1,7 @@
 package os2.main.processes.imp;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import os2.main.Core;
 import os2.main.hardware.memory.RMMemory;
@@ -26,7 +27,6 @@ public class JCL extends Process {
 
 	// private Resource programResource;
 
-	private ArrayList vars;
 	private int[] byteCode;
 	private String programName;
 
@@ -60,9 +60,20 @@ public class JCL extends Process {
 			try {
 				CommandsConverter cc = new CommandsConverter(programCode);
 				String[] commands = cc.getCommands();
-				this.vars = cc.getVariables();
+				ArrayList<Variable> vars = cc.getVariables();
 				Compiler compiler = new Compiler();
 				this.byteCode = compiler.compile(commands);
+
+				Iterator<Variable> varsIterator = vars.iterator();
+				int[] intVars = new int[vars.size() + 1];
+				int index = 0;
+				while (varsIterator.hasNext()) {
+					Variable v = varsIterator.next();
+					intVars[index++] = v.getValue();
+				}
+				intVars[index] = RMMemory.VARS_SEPARATOR;
+				this.byteCode = this.concat(intVars, this.byteCode);
+
 				this.changeStep(2);
 			} catch (Exception e) {
 				Resource resource = new Resource(ResourceType.LI_IN_MEM);
@@ -80,13 +91,22 @@ public class JCL extends Process {
 			ExecParamsDescriptor execDescriptor = new ExecParamsDescriptor();
 			execDescriptor.setProgramName(this.programName);
 			execDescriptor.setStartAddress(byteCodeStart);
-			execDescriptor.setEndAddress(byteCodeStart + this.byteCode.length + 1);
-			execDescriptor.setVars(this.vars);
+			execDescriptor.setEndAddress(byteCodeStart + this.byteCode.length
+					+ 1);
 			Resource res = new Resource(ResourceType.EXEC_PAR);
 			res.setDescriptor(execDescriptor);
 			Core.resourceList.addResource(res);
 			this.changeStep(0);
 			break;
 		}
+	}
+
+	private int[] concat(int[] A, int[] B) {
+		int aLen = A.length;
+		int bLen = B.length;
+		int[] C = new int[aLen + bLen];
+		System.arraycopy(A, 0, C, 0, aLen);
+		System.arraycopy(B, 0, C, aLen, bLen);
+		return C;
 	}
 }
