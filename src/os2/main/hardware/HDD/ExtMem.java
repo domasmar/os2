@@ -16,7 +16,7 @@ public class ExtMem {
 
     private static int[] memory = new int[sizeOfMemInt];
 
-    static void print() {
+    public static void print() {
         for (int i = 0; i < sizeOfMemInt; i++) {
             System.out.println(i + ": " + memory[i]);
         }
@@ -151,7 +151,7 @@ public class ExtMem {
                 tempFilenameAsInts[1] = getMem(i + 1);
                 tempFilenameAsInts[2] = getMem(i + 2);
                 if (Utilities.compareArrays(tempFilenameAsInts, filenameAsInts)) {
-                    return i;
+                    return i / 4;
                 }
             }
             return -1;

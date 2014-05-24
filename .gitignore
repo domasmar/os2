@@ -10,3 +10,4 @@ build.xml
 /build/
 src/OS.java
 mains.java
+/dist/
