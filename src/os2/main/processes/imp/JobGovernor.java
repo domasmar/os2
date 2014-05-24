@@ -23,7 +23,7 @@ import os2.main.software.executor.InterruptHandler;
  */
 public class JobGovernor extends Process {
 
-    private Process vm = null;
+    private Process vmProc = null;
     private VMMemory vmm = null;
     private Resource progInHddRes = null;
     private Resource memRes = null;
@@ -56,7 +56,11 @@ public class JobGovernor extends Process {
                 this.changeStep(1);
                 break;
 
-            // Blokuotas, laukiam kol bus galima išskirti atminties būsimai virtualiai mašinai ir ją patalpiname į resursų sąrašą
+            /* Sukuriame virtualios mašinos atmintį,
+             virtualios mašinos atminties resursą,
+             virtualios mašinos atminties resurso deskriptorių
+             ir patalpiname į resursų sąrašą
+             */
             case (1):
                 ProgramInHDDDescriptor progInHddDes = (ProgramInHDDDescriptor) progInHddRes.getDescriptor();
                 int[] filename = progInHddDes.getProgramName();
@@ -73,8 +77,10 @@ public class JobGovernor extends Process {
                 this.changeStep(2);
                 break;
 
-            //Paimame virtualią atmintį iš resursų sąrašo, susirandame failo pavadinimą tarp resursų, 
-            //kurį reikės paduot loader paketui ir sukūrę loader paketą jį įdedam į sąrašą               
+            /* Iš resurso programa būgne pasiimame failo pavadinimą,
+             sukuriame krovimo paketo resursą su deskriptoriumi, kuriame patalpiname pavadinimą ir atminties objektą,
+             pridedame krov.paket.resurs. į sąrašą   
+             */
             case (2):
                 Resource fromLoader = Core.resourceList.searchChildResource(this, ResourceType.PACK_FROM_LOAD);
                 if (fromLoader != null) {
@@ -84,17 +90,21 @@ public class JobGovernor extends Process {
                 }
                 break;
 
-            // Laukiam Loader proceso resurso(pranešimo apie darbo pabaigą)           
+            /*Blokuojamės, kol nesužinom, jog loader'is baigė darbą               
+             */
             case (3):
-                vm = new VirtualMachine(this);
-                memRes.setParent(vm);
-                Core.processQueue.add(vm);
+                vmProc = new VirtualMachine(this);
+                memRes.setParent(vmProc);
+                Core.processQueue.add(vmProc);
                 this.changeStep(4);
                 break;
 
-            // Sukuriam procesą "VirtualMachine"
+            /* Sukuriam procesą "VirtualMachine",
+             jį padarome atminties resurso tėvu,
+             VM pridedame į procesų sąrašą
+             */
             case (4):
-                intRes = Core.resourceList.searchChildResource(vm, ResourceType.INT);
+                intRes = Core.resourceList.searchChildResource(vmProc, ResourceType.INT);
                 if (intRes != null) {
                     this.changeStep(5);
                 } else {
@@ -102,20 +112,27 @@ public class JobGovernor extends Process {
                 }
                 break;
 
-            // Blokuotas, laukiam "Iš interrupt" resurso
+            /* Laukiame virtualios mašinos sukurto interrupt resurso
+             */
             case (5):
                 InterruptDescriptor intDes = (InterruptDescriptor) intRes.getDescriptor();
-                InterruptHandler handler = new InterruptHandler(intDes);
-
-                // Stabdom VirtualMachine
-                // Apdorojam pertraukimą
-                // Jeigu pabaigos pertraukimas
-                // Naikinam VirtualMachine
-                // Jeigu spausdinimo pertraukimas
-                // Į išvedimo srautą siunčiami blokų adresai kuriuos naikinti
-                // Tęsiam VirtualMachine procesą
-                // this.step = 7
+                InterruptHandler handler = new InterruptHandler(intDes, this);
+                if (handler.fix()) {
+                    intDes.setFixed(true);
+                    this.changeStep(4);
+                    break;
+                } else {
+                    Core.processQueue.delete(vmProc.getPid());
+                    progInHddRes.setParent(null);
+                    this.changeStep(6);
+                }
                 break;
+
+            /* Perduodame interupto resursą jo tvarkytojui, 
+             jei galima tęsti einame į 4 case, jei ne į 6
+             */
+            case (6):
+            /*Laukiame, kol bus ištrinta */
         }
     }
 }

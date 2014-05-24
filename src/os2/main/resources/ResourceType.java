@@ -18,6 +18,7 @@ public class ResourceType {
     public static final String EXEC_PAR = "EXECUTION_PARAMETERS";
     public static final String TASK_IN_EXT_MEM = "TASK_IN_EXTERNAL_MEMORY";
     public static final String LI_IN_MEM = "LINE_IN_MEMORY";
+    public static final String LI_TO_PR = "LINE_TO_PRINT";
     public static final String CPU = "CENTRAL_PROCESSING_UNIT";
     public static final String END = "END_OF_OPERATING_SYSTEM";
     public static final String PROGRAM_IN_SUPERVISOR = "PROGRAM_IN_SUPERVISOR";

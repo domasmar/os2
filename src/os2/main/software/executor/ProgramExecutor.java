@@ -1,9 +1,14 @@
 package os2.main.software.executor;
 
+import os2.main.Core;
 import os2.main.hardware.*;
 import os2.main.hardware.memory.VMMemory;
 import static os2.main.software.executor.Command.*;
+import os2.main.processes.Process;
 import os2.main.hardware.CPU.*;
+import os2.main.resources.Resource;
+import os2.main.resources.ResourceType;
+import os2.main.resources.descriptors.LineToPrintDescriptor;
 
 /**
  *
@@ -12,11 +17,13 @@ import os2.main.hardware.CPU.*;
 public class ProgramExecutor {
 
     private VMMemory memory;
-    public CmdWithVar lastCmd;
+    private CmdWithVar lastCmd;
+    private Process parentOfVM;
 
-    public ProgramExecutor(VMMemory virtualMemory) {
+    public ProgramExecutor(VMMemory virtualMemory, Process parentOfVM) {
         this.memory = virtualMemory;
         this.lastCmd = new CmdWithVar();
+        this.parentOfVM = parentOfVM;
     }
 
     public void executeNext() throws RuntimeException {
@@ -324,6 +331,11 @@ public class ProgramExecutor {
         short nextCmdAddr = (short) (CPU.getIP() + 1);
         CPU.setIP(nextCmdAddr);
         lastCmd.command = OUTR_AX;
+        Resource line = new Resource(ResourceType.LI_TO_PR);
+        LineToPrintDescriptor liDes = new LineToPrintDescriptor();
+        liDes.setLine(CPU.getAX());
+        line.setParent(parentOfVM);
+        Core.resourceList.addResource(line);
     }
 
     private void cmdOutrBx() throws RuntimeException {
@@ -332,6 +344,11 @@ public class ProgramExecutor {
         short nextCmdAddr = (short) (CPU.getIP() + 1);
         CPU.setIP(nextCmdAddr);
         lastCmd.command = OUTR_BX;
+        Resource line = new Resource(ResourceType.LI_TO_PR);
+        LineToPrintDescriptor liDes = new LineToPrintDescriptor();
+        liDes.setLine(CPU.getBX());
+        line.setParent(parentOfVM);
+        Core.resourceList.addResource(line);
     }
 
     private void cmdOutM(int variable) throws RuntimeException {
@@ -341,6 +358,11 @@ public class ProgramExecutor {
         CPU.setIP(nextCmdAddr);
         lastCmd.command = OUTM;
         lastCmd.variable = variable;
+        Resource line = new Resource(ResourceType.LI_TO_PR);
+        LineToPrintDescriptor liDes = new LineToPrintDescriptor();
+        liDes.setLine(memory.get(variable));
+        line.setParent(parentOfVM);
+        Core.resourceList.addResource(line);
     }
 
     private void cmdAdd() throws RuntimeException {

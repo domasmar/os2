@@ -40,14 +40,17 @@ public class VirtualMachine extends Process {
                     CPU.setMODE((byte) 0);
                     VirtualMemoryDescriptor des = (VirtualMemoryDescriptor) vm.getDescriptor();
                     vmm = des.getMemory();
-                    exec = new ProgramExecutor(vmm);
+                    exec = new ProgramExecutor(vmm, parentOfVM);
                     this.changeStep(1);
                 } else {
                     this.changeStep(0);
                 }
                 break;
 
-            // Perjungiam procesorių į vartotojo režimą
+            /* Pasiimame iš resursų sąrašo atmintį,
+             nustatome CPU mode,
+             sukuriame executorių   
+             */
             case (1):
                 vmm.loadCPUState();
                 exec.executeNext();
@@ -66,9 +69,12 @@ public class VirtualMachine extends Process {
                     break;
                 }
 
-            // Veikia tol kol įvyksta pertraukimas,
-            // Išsaugom procesoriaus būseną
-            // Sukuriamas resursas "Pertraukimas"
+            /* Užkraunam procesoriaus būseną,
+             įvykdom komandą,
+             tikrinam ar nekilo interuptas, 
+             jei kilo įdedame jį į resursų sąrašą, kad JG matytų,
+             išsaugome procesoriaus būseną
+             */
             case (2):
                 Resource intFixed = Core.resourceList.searchChildResource(this, ResourceType.INT);
                 if (intFixed != null) {
@@ -82,6 +88,10 @@ public class VirtualMachine extends Process {
                     this.changeStep(2);
                 }
                 break;
+            /* Tikriname ar interruptas sutvarkytas,
+             jei ne laukiame, kol bus sutvarkytas,
+             jei sutvakrytas tęsiame darbą 
+             */
         }
     }
 }
