@@ -35,9 +35,6 @@ public class ChannelsDevice {
 			FileSaver programToHDD = null;
 			int[] program;
 			program = RMMemory.getIntProgramFromMemory(startAddress, endAddress);
-			for (int i = 0; i < program.length; i++) {
-				System.out.println(program[i]);
-			}
 			try {
 				programToHDD = new FileSaver(programName);
 			} catch (Exception e) {
@@ -61,7 +58,8 @@ public class ChannelsDevice {
 		/* Kopijavimas iš išorinės atminties į vartotojo */
 		if (ST == 3 && DT == 1) {
 			FileLoader programInHDD = null;
-			int[] program = null;
+			int[] program = new int[0];
+			int[] programBlock;
 			try {
 				programInHDD = new FileLoader(programName);
 			} catch (Exception e) {
@@ -69,9 +67,10 @@ public class ChannelsDevice {
 				e.printStackTrace();
 			}
 			while (!programInHDD.checkIfFileEnd()) {
-				program = concat(program, programInHDD.getBlockOfFile());
-				vmm.loadProgram(program);
+				programBlock = programInHDD.getBlockOfFile();
+				program = concat(program, programBlock);
 			}
+			vmm.loadProgram(program);
 		}
 		
 		/* Kopijavimas iš supervizorinės atminties į išvedimo srautą */
