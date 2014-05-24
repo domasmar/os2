@@ -15,6 +15,7 @@ import os2.main.resources.descriptors.ProgramInHDDDescriptor;
 public class MainProc extends Process {
 
 	private Resource resourceToDestroy;
+	private int pidToDestroy;
 
 	@Override
 	public void nextStep() {
@@ -40,6 +41,7 @@ public class MainProc extends Process {
 				this.changeStep(2);
 			} else {
 				this.resourceToDestroy = res;
+				this.pidToDestroy = resourceToDestroy.getParent().getPid();
 				this.changeStep(3);
 			}
 			break;
@@ -49,12 +51,14 @@ public class MainProc extends Process {
 			res = Core.resourceList.searchChildResource(this,
 					ResourceType.PROGRAM_IN_HDD);
 			JobGovernor jg = new JobGovernor(res);
+			res.setParent(jg);
 			Core.processQueue.add(jg);
 			this.changeStep(0);
 			break;
 		case (3):
 			// Naikinamas procesas "JobGovernor" sukūręs gautajį resursą
 			Core.resourceList.deleteByInstance(this.resourceToDestroy);
+			Core.processQueue.delete(this.pidToDestroy);
 			this.changeStep(0);
 			break;
 
