@@ -1,7 +1,6 @@
 package os2.main.hardware.ChannelsDevice;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import os2.main.hardware.HDD.FileLoader;
@@ -73,6 +72,12 @@ public class ChannelsDevice {
 				program = concat(program, programInHDD.getBlockOfFile());
 				vmm.loadProgram(program);
 			}
+		}
+		
+		/* Kopijavimas iš supervizorinės atminties į išvedimo srautą */
+		if (ST == 2 && DT == 4) {
+			int[] messageInts;
+			messageInts = RMMemory.getIntProgramFromMemory(startAddress, endAddress);
 		}
 		
 		return true;

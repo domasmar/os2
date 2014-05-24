@@ -11,7 +11,7 @@ import os2.main.resources.descriptors.PrintDescriptor;
 /**
  * Šio proceso paskirtis – į išvedimo srautą pasiųsti 
  * kokioje nors atmintyje esantį pranešimą.
- * @author domas
+ * @author Tadas
  *
  */
 public class PrintLine extends Process {
