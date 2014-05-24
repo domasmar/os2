@@ -6,7 +6,6 @@ import os2.main.hardware.memory.VMMemory;
 import os2.main.processes.Process;
 import os2.main.resources.Resource;
 import os2.main.resources.ResourceType;
-import os2.main.resources.descriptors.FromLoaderDescriptor;
 import os2.main.resources.descriptors.LoaderPacketDescriptor;
 
 /**
@@ -74,7 +73,6 @@ public class Loader extends Process {
 			// sukūrusiam gautąjį "Pakrovimo paketo" resursą
 			res = new Resource(ResourceType.PACK_FROM_LOAD);
 			res.setParent(this.jg);
-			FromLoaderDescriptor descriptor = new FromLoaderDescriptor();
 			Core.resourceList.addResource(res);
 			Core.resourceList.deleteChildResource(this, ResourceType.LOAD_PACK);
 			this.changeStep(0);
