@@ -25,7 +25,6 @@ public class ChannelsDevice {
 	public static int DT;
 	
 	public static VMMemory vmm;
-	public static ArrayList vars;
 
 	public static int[] programName;
 	public static int startAddress;
