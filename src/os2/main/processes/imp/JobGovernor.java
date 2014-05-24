@@ -105,7 +105,7 @@ public class JobGovernor extends Process {
              VM pridedame į procesų sąrašą
              */
             case (4):
-                intRes = Core.resourceList.searchChildResource(vmProc, ResourceType.INT);
+                intRes = Core.resourceList.searchChildResource(this, ResourceType.INT);
                 if (intRes != null) {
                     this.changeStep(5);
                 } else {
@@ -116,7 +116,7 @@ public class JobGovernor extends Process {
             /* Laukiame virtualios mašinos sukurto interrupt resurso
              */
             case (5):
-                InterruptDescriptor intDes = (InterruptDescriptor) intRes.getDescriptor();
+                InterruptDescriptor intDes = (InterruptDescriptor) intRes.getDescriptor();                
                 InterruptHandler handler = new InterruptHandler(intDes, this);
                 if (handler.fix()) {
                     intDes.setFixed(true);
