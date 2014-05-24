@@ -122,7 +122,7 @@ public class VMMemory {
 	public void push(int value) {
 		int sp = CPU.getSP();
 		if (sp + CPU.getSS() + 1 >= CPU.getCS()) {
-			CPU.setSI((byte) 1);
+			CPU.setSP((byte) 1);
 			throw new RuntimeException("Stack overflow");
 		}
 		this.set(CPU.getSS() + sp + 1, value);
