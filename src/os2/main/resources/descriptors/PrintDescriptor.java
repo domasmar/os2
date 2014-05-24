@@ -4,13 +4,22 @@ import os2.main.resources.descriptors.interfaces.ResourceDescriptorInterface;
 
 public class PrintDescriptor implements ResourceDescriptorInterface {
 
-	private String message;
+	private int startAddress;
+	private int endAddress;
 
-	public String getMessage() {
-		return message;
+	public int getStartAddress() {
+		return this.startAddress;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
+	public void setStartAddress(int startAddress) {
+		this.startAddress = startAddress;
+	}
+	
+	public int getEndAddress() {
+		return this.endAddress;
+	}
+
+	public void setEndAddress(int endAddress) {
+		this.endAddress = endAddress;
 	}
 }
