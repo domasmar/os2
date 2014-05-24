@@ -53,7 +53,7 @@ public class InterruptHandler {
             return false;
 
         } else if (intDes.getType() == Type.TI) {
-            return true;
+            return false;
 
         }
         return false;
