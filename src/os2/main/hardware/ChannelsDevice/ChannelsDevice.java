@@ -61,19 +61,30 @@ public class ChannelsDevice {
 		
 		/* Kopijavimas iš išorinės atminties į vartotojo */
 		if (ST == 3 && DT == 1) {
-			FileLoader program = null;
+			FileLoader programInHDD = null;
+			int[] program = null;
 			try {
-				program = new FileLoader(programName);
+				programInHDD = new FileLoader(programName);
 			} catch (Exception e) {
 				System.out.println("Problema skaitant programą iš išorinės atminties!");
 				e.printStackTrace();
 			}
-			while (!program.checkIfFileEnd()) {
-				
+			while (!programInHDD.checkIfFileEnd()) {
+				program = concat(program, programInHDD.getBlockOfFile());
+				vmm.loadProgram(program);
 			}
 		}
 		
 		return true;
+	}
+	
+	private static int[] concat(int[] A, int[] B) {
+		int aLen = A.length;
+		int bLen = B.length;
+		int[] C = new int[aLen + bLen];
+		System.arraycopy(A, 0, C, 0, aLen);
+		System.arraycopy(B, 0, C, aLen, bLen);
+		return C;
 	}
 
 }
