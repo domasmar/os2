@@ -28,6 +28,7 @@ public class PrintLine extends Process {
 			res = Core.resourceList.searchResource(ResourceType.LI_IN_MEM);
 			if (res != null) {
 				PrintDescriptor descriptor = (PrintDescriptor) res.getDescriptor();
+				res.setParent(this);
 				this.startAddress = descriptor.getStartAddress();
 				this.endAddress = descriptor.getEndAddress();
 				this.changeStep(1);
@@ -68,6 +69,7 @@ public class PrintLine extends Process {
 			// Atlaisvinamas "Kanalų įrenginys" resursas
 			res = Core.resourceList.searchResource(ResourceType.CH_DEV);
 			res.removeParent();
+			Core.resourceList.deleteChildResource(this, ResourceType.LI_IN_MEM);
 			this.changeStep(0);
 			break;
 		}
