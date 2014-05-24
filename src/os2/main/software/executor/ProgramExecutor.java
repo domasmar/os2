@@ -14,9 +14,8 @@ public class ProgramExecutor {
     private VMMemory memory;
     public CmdWithVar lastCmd;
 
-    public ProgramExecutor(VMMemory virtualMemory, Stack stack) {
+    public ProgramExecutor(VMMemory virtualMemory) {
         this.memory = virtualMemory;
-        this.stack = stack;
         this.lastCmd = new CmdWithVar();
     }
 
@@ -214,8 +213,8 @@ public class ProgramExecutor {
         }
 
         try {
-            stack.push(variable);
-        } catch (Exception e) {
+            memory.push(variable);
+        } catch (RuntimeException e) {
             CPU.setSTI((byte) 1);
         }
 
@@ -232,8 +231,9 @@ public class ProgramExecutor {
         }
 
         try {
-            stack.pop(variable);
-        } catch (Exception e) {
+            int value = memory.pop();
+            memory.set(variable, value);
+        } catch (RuntimeException e) {
             CPU.setSTI((byte) 1);
         }
 

@@ -14,6 +14,7 @@ public class InterruptDescriptor implements ResourceDescriptorInterface {
 
     private Type type;
     private byte value;
+    private boolean fixed;
 
     public Type getType() {
         return type;
@@ -30,5 +31,13 @@ public class InterruptDescriptor implements ResourceDescriptorInterface {
      public void setValue(byte value ) {
         this.value = value;
     }
+     
+     public void setFixed(boolean fixed){
+         this.fixed = fixed;
+     }
+     
+     public boolean getFixed(){
+         return this.fixed;
+     }
 
 }

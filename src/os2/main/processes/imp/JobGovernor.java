@@ -6,10 +6,11 @@ import os2.main.hardware.memory.VMMemory;
 import os2.main.processes.Process;
 import os2.main.resources.Resource;
 import os2.main.resources.ResourceType;
-import os2.main.resources.descriptors.FilenameDescriptor;
+import os2.main.resources.descriptors.InterruptDescriptor;
 import os2.main.resources.descriptors.LoaderPacketDescriptor;
 import os2.main.resources.descriptors.ProgramInHDDDescriptor;
 import os2.main.resources.descriptors.VirtualMemoryDescriptor;
+import os2.main.software.executor.InterruptHandler;
 
 /**
  * Proceso „JobGorvernor“ paskirtis – kurti, naikinti ir padėti procesui
@@ -22,16 +23,14 @@ import os2.main.resources.descriptors.VirtualMemoryDescriptor;
  */
 public class JobGovernor extends Process {
 
-    Process vm = null;
-    VMMemory vmm = null;
-    Resource progInHddRes = null;
+    private Process vm = null;
+    private VMMemory vmm = null;
+    private Resource progInHddRes = null;
+    private Resource memRes = null;
+    private Resource intRes = null;
 
     public JobGovernor(Resource progInHdd) {
         this.progInHddRes = progInHdd;
-    }
-
-    private JobGovernor() {
-
     }
 
     @Override
@@ -46,7 +45,7 @@ public class JobGovernor extends Process {
                     break;
                 }
 
-                Resource memRes = new Resource(ResourceType.VIRT_MEM);
+                memRes = new Resource(ResourceType.VIRT_MEM);
                 memRes.setParent(this);
 
                 VirtualMemoryDescriptor memDes = new VirtualMemoryDescriptor();
@@ -59,14 +58,14 @@ public class JobGovernor extends Process {
 
             // Blokuotas, laukiam kol bus galima išskirti atminties būsimai virtualiai mašinai ir ją patalpiname į resursų sąrašą
             case (1):
-                ProgramInHDDDescriptor progInHddDes = (ProgramInHDDDescriptor) progInHddRes.getDescriptor();           
+                ProgramInHDDDescriptor progInHddDes = (ProgramInHDDDescriptor) progInHddRes.getDescriptor();
                 int[] filename = progInHddDes.getProgramName();
 
                 Resource loaderPacket = new Resource(ResourceType.LOAD_PACK);
                 loaderPacket.setParent(this);
-                loaderPacket.setDescriptor(new LoaderPacketDescriptor());
+                LoaderPacketDescriptor loadDes = new LoaderPacketDescriptor();
+                loaderPacket.setDescriptor(loadDes);
 
-                LoaderPacketDescriptor loadDes = (LoaderPacketDescriptor) loaderPacket.getDescriptor();
                 loadDes.setMemory(vmm);
                 loadDes.setFilename(filename);
 
@@ -87,11 +86,6 @@ public class JobGovernor extends Process {
 
             // Laukiam Loader proceso resurso(pranešimo apie darbo pabaigą)           
             case (3):
-                Resource memRes = Core.resourceList.searchChildResource(this, ResourceType.VIRT_MEM);
-                if (memRes == null) {
-                    this.changeStep(3);
-                    break;
-                }
                 vm = new VirtualMachine(this);
                 memRes.setParent(vm);
                 Core.processQueue.add(vm);
@@ -100,8 +94,8 @@ public class JobGovernor extends Process {
 
             // Sukuriam procesą "VirtualMachine"
             case (4):
-                Resource interrupt = Core.resourceList.searchChildResource(vm, ResourceType.INT);
-                if (interrupt != null) {
+                intRes = Core.resourceList.searchChildResource(vm, ResourceType.INT);
+                if (intRes != null) {
                     this.changeStep(5);
                 } else {
                     this.changeStep(4);
@@ -110,6 +104,8 @@ public class JobGovernor extends Process {
 
             // Blokuotas, laukiam "Iš interrupt" resurso
             case (5):
+                InterruptDescriptor intDes = (InterruptDescriptor) intRes.getDescriptor();
+                InterruptHandler handler = new InterruptHandler(intDes);
 
                 // Stabdom VirtualMachine
                 // Apdorojam pertraukimą
