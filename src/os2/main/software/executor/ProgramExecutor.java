@@ -20,12 +20,12 @@ public class ProgramExecutor {
         this.lastCmd = new CmdWithVar();
     }
 
-    public boolean executeNext() throws RuntimeException {
+    public void executeNext() throws RuntimeException {
         if (CPU.getTIMER() == 0) {
             CPU.setTI((byte) 1);
-            return false;
+            return;
         } else {
-            CPU.setTIMER(CPU.getTIMER()-1);
+            CPU.setTIMER(CPU.getTIMER() - 1);
         }
         int word = memory.get(CPU.getCS() + CPU.getIP());
         String bits = intToBits(word);
@@ -36,107 +36,107 @@ public class ProgramExecutor {
 
         if (cmdInt == CommandBytecode.ADD) {
             cmdAdd();
-            return true;
+            return;
         }
 
         if (cmdInt == CommandBytecode.SUB) {
             cmdSub();
-            return true;
+            return;
         }
 
         if (cmdInt == CommandBytecode.CMP) {
             cmdCmp();
-            return true;
+            return;
         }
 
         if (cmdInt == CommandBytecode.STOP) {
             cmdStop();
-            return false;
+            return;
         }
 
         if (cmdInt == CommandBytecode.MOV_AX) {
             valueInt = memory.get(CPU.getCS() + CPU.getIP() + 1);
             cmdMovAx(valueInt);
-            return true;
+            return;
         }
 
         if (cmdInt == CommandBytecode.MOV_BX) {
             valueInt = memory.get(CPU.getCS() + CPU.getIP() + 1);
             cmdMovBx(valueInt);
-            return true;
+            return;
         }
 
         if (cmdInt == CommandBytecode.LOA_AX) {
             cmdLoaAx(valueInt);
-            return true;
+            return;
         }
 
         if (cmdInt == CommandBytecode.LOA_BX) {
             cmdLoaBx(valueInt);
-            return true;
+            return;
         }
 
         if (cmdInt == CommandBytecode.STO_AX) {
             cmdStoAx(valueInt);
-            return true;
+            return;
         }
 
         if (cmdInt == CommandBytecode.STO_BX) {
             cmdStoBx(valueInt);
-            return true;
+            return;
         }
 
         if (cmdInt == CommandBytecode.PUSH) {
             cmdPush(valueInt);
-            return true;
+            return;
         }
 
         if (cmdInt == CommandBytecode.POP) {
             cmdPop(valueInt);
-            return true;
+            return;
         }
 
         if (cmdInt == CommandBytecode.JA) {
             cmdJa(valueInt);
-            return true;
+            return;
         }
 
         if (cmdInt == CommandBytecode.JB) {
             cmdJb(valueInt);
-            return true;
+            return;
         }
 
         if (cmdInt == CommandBytecode.JE) {
             cmdJe(valueInt);
-            return true;
+            return;
         }
 
         if (cmdInt == CommandBytecode.JMP) {
             cmdJmp(valueInt);
-            return true;
+            return;
         }
 
         if (cmdInt == CommandBytecode.JNE) {
             cmdJne(valueInt);
-            return true;
+            return;
         }
 
         if (cmdInt == CommandBytecode.OUTR_AX) {
             cmdOutrAx();
-            return false;
+            return;
         }
 
         if (cmdInt == CommandBytecode.OUTR_BX) {
             cmdOutrBx();
-            return false;
+            return;
         }
 
         if (cmdInt == CommandBytecode.OUTM) {
             cmdOutM(valueInt);
-            return false;
+            return;
         }
         CPU.setPI((byte) 2); //jei blogas operacijos kodas
-        return false;
+        return;
     }
 
 //******************************************************************************
@@ -386,6 +386,7 @@ public class ProgramExecutor {
     private void cmdStop() throws RuntimeException {
         short nextCmdAddr = (short) (CPU.getIP() + 1);
         CPU.setIP(nextCmdAddr);
+        CPU.setEND((byte) 1);
         lastCmd.command = STOP;
     }
 

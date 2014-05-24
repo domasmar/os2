@@ -8,6 +8,7 @@ import os2.main.resources.Resource;
 import os2.main.resources.ResourceType;
 import os2.main.resources.descriptors.FilenameDescriptor;
 import os2.main.resources.descriptors.LoaderPacketDescriptor;
+import os2.main.resources.descriptors.ProgramInHDDDescriptor;
 import os2.main.resources.descriptors.VirtualMemoryDescriptor;
 
 /**
@@ -21,65 +22,63 @@ import os2.main.resources.descriptors.VirtualMemoryDescriptor;
  */
 public class JobGovernor extends Process {
 
+    Process vm = null;
+    VMMemory vmm = null;
+    Resource progInHddRes = null;
+
+    public JobGovernor(Resource progInHdd) {
+        this.progInHddRes = progInHdd;
+    }
+
+    private JobGovernor() {
+
+    }
+
     @Override
     public void nextStep() {
-        Process vm = null;
+
         switch (this.step) {
             case (0):
-                VMMemory memory;
                 try {
-                    memory = RMMemory.createVMMemory();
+                    vmm = RMMemory.createVMMemory();
                 } catch (RuntimeException e) {
                     this.changeStep(0);
                     break;
                 }
 
-                Resource memoryR = new Resource(ResourceType.VIRT_MEM);
-                memoryR.setParent(this);
-                memoryR.setDescriptor(new VirtualMemoryDescriptor());
+                Resource memRes = new Resource(ResourceType.VIRT_MEM);
+                memRes.setParent(this);
 
-                VirtualMemoryDescriptor memDes = (VirtualMemoryDescriptor) memoryR.getDescriptor();
-                memDes.setMemory(memory);
+                VirtualMemoryDescriptor memDes = new VirtualMemoryDescriptor();
+                memRes.setDescriptor(memDes);
+                memDes.setMemory(vmm);
 
-                Core.resourceList.addResource(memoryR);
+                Core.resourceList.addResource(memRes);
                 this.changeStep(1);
                 break;
 
             // Blokuotas, laukiam kol bus galima išskirti atminties būsimai virtualiai mašinai ir ją patalpiname į resursų sąrašą
             case (1):
-                memory = null;
-                memDes = (VirtualMemoryDescriptor) Core.resourceList.searchChildResource(this, ResourceType.VIRT_MEM).getDescriptor();
-                memory = memDes.getMemory();
-                if (memory == null) {
-                    this.changeStep(1);
-                    break;
-                }
-
-                FilenameDescriptor nameDes = (FilenameDescriptor) Core.resourceList.searchResource(ResourceType.FILE_NAME).getDescriptor();
-                if (nameDes == null) {
-                    this.changeStep(1);
-                    break;
-                }
-                int[] filename = nameDes.getFilename();
+                ProgramInHDDDescriptor progInHddDes = (ProgramInHDDDescriptor) progInHddRes.getDescriptor();           
+                int[] filename = progInHddDes.getProgramName();
 
                 Resource loaderPacket = new Resource(ResourceType.LOAD_PACK);
                 loaderPacket.setParent(this);
                 loaderPacket.setDescriptor(new LoaderPacketDescriptor());
 
                 LoaderPacketDescriptor loadDes = (LoaderPacketDescriptor) loaderPacket.getDescriptor();
-                loadDes.setMemory(memory);
+                loadDes.setMemory(vmm);
                 loadDes.setFilename(filename);
 
                 Core.resourceList.addResource(loaderPacket);
                 this.changeStep(2);
                 break;
 
-                //Paimame virtualią atmintį iš resursų sąrašo, susirandame failo pavadinimą tarp resursų, 
+            //Paimame virtualią atmintį iš resursų sąrašo, susirandame failo pavadinimą tarp resursų, 
             //kurį reikės paduot loader paketui ir sukūrę loader paketą jį įdedam į sąrašą               
             case (2):
                 Resource fromLoader = Core.resourceList.searchChildResource(this, ResourceType.PACK_FROM_LOAD);
                 if (fromLoader != null) {
-                    fromLoader.setParent(this);
                     this.changeStep(3);
                 } else {
                     this.changeStep(2);
@@ -93,7 +92,7 @@ public class JobGovernor extends Process {
                     this.changeStep(3);
                     break;
                 }
-                vm = new VirtualMachine();
+                vm = new VirtualMachine(this);
                 memRes.setParent(vm);
                 Core.processQueue.add(vm);
                 this.changeStep(4);
@@ -111,7 +110,7 @@ public class JobGovernor extends Process {
 
             // Blokuotas, laukiam "Iš interrupt" resurso
             case (5):
-                
+
                 // Stabdom VirtualMachine
                 // Apdorojam pertraukimą
                 // Jeigu pabaigos pertraukimas
