@@ -180,7 +180,7 @@ public class ExtMem {
                 value = getMem(rootSize + jump);
                 if (i == number) {
                     for (int j = 0; j < 16; j++) {
-                        block[j] = getMem(rootSize + FATSize + (i + 2) * 16 + j);
+                        block[j] = getMem(rootSize + FATSize + 32 + ((value - 3) * 16) + j);
                     }
                 } else {
                     jump = value;
