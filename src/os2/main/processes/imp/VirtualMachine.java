@@ -1,7 +1,5 @@
 package os2.main.processes.imp;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import os2.main.Core;
 import os2.main.hardware.CPU;
 import os2.main.hardware.memory.VMMemory;
@@ -10,9 +8,7 @@ import os2.main.resources.Resource;
 import os2.main.resources.ResourceType;
 import os2.main.resources.descriptors.InterruptDescriptor;
 import os2.main.resources.descriptors.VirtualMemoryDescriptor;
-import os2.main.resources.descriptors.interfaces.ResourceDescriptorInterface;
 import os2.main.software.executor.InterruptChecker;
-import os2.main.software.executor.InterruptIndicator;
 import os2.main.software.executor.ProgramExecutor;
 
 /**
@@ -28,14 +24,10 @@ public class VirtualMachine extends Process {
 
     private VMMemory vmm = null;
     private ProgramExecutor exec = null;
-    private Process parent;
-    
-    public VirtualMachine(Process parent){
-        this.parent = parent;
-    }
-    
-    private VirtualMachine() {
+    private Process parentOfVM;
 
+    public VirtualMachine(Process parent) {
+        this.parentOfVM = parent;
     }
 
     @Override
@@ -48,22 +40,22 @@ public class VirtualMachine extends Process {
                     CPU.setMODE((byte) 0);
                     VirtualMemoryDescriptor des = (VirtualMemoryDescriptor) vm.getDescriptor();
                     vmm = des.getMemory();
-                    Stack stack = new Stack(vmm);
-                    exec = new ProgramExecutor(vmm, stack);
+                    exec = new ProgramExecutor(vmm);
                     this.changeStep(1);
                 } else {
                     this.changeStep(0);
                 }
-                // Perjungiam procesorių į vartotojo režimą
                 break;
+
+            // Perjungiam procesorių į vartotojo režimą
             case (1):
                 vmm.loadCPUState();
                 exec.executeNext();
-                InterruptDescriptor des = InterruptChecker.getInt();
-                if (des != null) {
+                InterruptDescriptor intDes = InterruptChecker.getInt();
+                if (intDes != null) {
                     Resource inter = new Resource(ResourceType.INT);
-                    inter.setParent(parent);
-                    inter.setDescriptor(des);
+                    inter.setParent(parentOfVM);
+                    inter.setDescriptor(intDes);
                     Core.resourceList.addResource(inter);
                     this.changeStep(2);
                     vmm.saveCPUState();
@@ -73,15 +65,23 @@ public class VirtualMachine extends Process {
                     vmm.saveCPUState();
                     break;
                 }
-                // Veikia tol kol įvyksta pertraukimas,
-                // Išsaugom procesoriaus būseną
-                // Sukuriamas resursas "Pertraukimas"
+
+            // Veikia tol kol įvyksta pertraukimas,
+            // Išsaugom procesoriaus būseną
+            // Sukuriamas resursas "Pertraukimas"
             case (2):
-                // Atslaivinamas resursas "Pertraukimas"
+                Resource intFixed = Core.resourceList.searchChildResource(this, ResourceType.INT);
+                if (intFixed != null) {
+                    intDes = (InterruptDescriptor) intFixed.getDescriptor();
+                    if (intDes.getFixed() == true) {
+                        this.changeStep(1);
+                    } else {
+                        this.changeStep(2);
+                    }
+                } else {
+                    this.changeStep(2);
+                }
                 break;
-
-            case (3):
-
         }
     }
 }
