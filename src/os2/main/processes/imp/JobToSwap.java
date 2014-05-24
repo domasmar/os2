@@ -1,6 +1,5 @@
 package os2.main.processes.imp;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import os2.main.Core;
