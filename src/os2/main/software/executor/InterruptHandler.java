@@ -1,6 +1,7 @@
 package os2.main.software.executor;
 
 import os2.main.resources.descriptors.InterruptDescriptor;
+import os2.main.processes.Process;
 
 /**
  *
