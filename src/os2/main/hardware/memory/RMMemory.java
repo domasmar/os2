@@ -14,6 +14,9 @@ public class RMMemory {
 	public static final int SUPERVISOR_MEMORY_SIZE = 1024;
 	public static final int MEMORY_SIZE = 3072;
 	public static final int BLOCK_SIZE = 16;
+	
+	public static final int SEPARATOR = -80085;
+	public static final int VARS_SEPARATOR = -8008135;
 
 	public static final int TOTAL_MEMORY_SIZE = MEMORY_SIZE
 			+ SUPERVISOR_MEMORY_SIZE;
@@ -130,7 +133,7 @@ public class RMMemory {
 		for (int index = begin; index < SUPERVISOR_MEMORY_SIZE + MEMORY_SIZE
 				- 1; index++) {
 
-			if (RMMemory.get(index) == -1) {
+			if (RMMemory.get(index) == SEPARATOR) {
 				useable = useable ? false : true;
 			}
 			size = useable ? size + 1 : 0;
@@ -155,11 +158,11 @@ public class RMMemory {
 		}
 
 		int i;
-		RMMemory.set(start, -1);
+		RMMemory.set(start, SEPARATOR);
 		for (i = 1; i < content.length + 1; i++) {
 			RMMemory.set(i + start, content[i - 1]);
 		}
-		RMMemory.set(i + start, -1);
+		RMMemory.set(i + start, SEPARATOR);
 		return start;
 	}
 
@@ -172,11 +175,12 @@ public class RMMemory {
 	}
 
 	private static int[] getProgramFromMemory(int start, int end) {
+		//System.out.println(RMMemory.toStr());
 		int i = 0;
 		int index;
 		int[] program = new int[end - start - 1];
 		for (index = start; index < end; index++) {
-			if (RMMemory.get(index) != -1 && RMMemory.get(index) != 0) {
+			if (RMMemory.get(index) != SEPARATOR) {
 				program[i] = RMMemory.get(index);
 				i++;
 			}
