@@ -75,8 +75,6 @@ public class Loader extends Process {
 			res = new Resource(ResourceType.PACK_FROM_LOAD);
 			res.setParent(this.jg);
 			FromLoaderDescriptor descriptor = new FromLoaderDescriptor();
-			descriptor.setMessage("Programa " + this.programName + " iš išorinės atminties perkelta į vartotojo");
-			res.setDescriptor(descriptor);
 			Core.resourceList.addResource(res);
 			Core.resourceList.deleteChildResource(this, ResourceType.LOAD_PACK);
 			this.changeStep(0);

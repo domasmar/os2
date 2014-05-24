@@ -3,10 +3,13 @@ package os2.main.hardware.ChannelsDevice;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
+import os2.main.Core;
 import os2.main.hardware.HDD.FileLoader;
 import os2.main.hardware.HDD.FileSaver;
 import os2.main.hardware.memory.RMMemory;
 import os2.main.hardware.memory.VMMemory;
+import os2.main.resources.Resource;
+import os2.main.resources.ResourceType;
 
 public class ChannelsDevice {
 	
@@ -38,7 +41,9 @@ public class ChannelsDevice {
 			try {
 				programToHDD = new FileSaver(programName);
 			} catch (Exception e) {
-				System.out.println("Nepavyko išskirti vietos išorinėje atminties naujai programai!");
+				Resource res = new Resource(ResourceType.LI_IN_MEM);
+				res.setDescriptor(RMMemory.loadStringToMemory("Nepavyko išskirti vietos išorinėje atminties naujai programai!"));
+				Core.resourceList.addResource(res);
 				e.printStackTrace();
 				return false;
 			}
@@ -47,7 +52,9 @@ public class ChannelsDevice {
 				try {
 					programToHDD.saveBlockOfFile(block);
 				} catch (UnsupportedEncodingException e) {
-					System.out.println("Nepavyko programos perkelti iš supervizorinės atminties į išorinę!");
+					Resource res = new Resource(ResourceType.LI_IN_MEM);
+					res.setDescriptor(RMMemory.loadStringToMemory("Nepavyko programos perkelti iš supervizorinės atminties į išorinę!"));
+					Core.resourceList.addResource(res);
 					e.printStackTrace();
 					return false;
 				}
@@ -63,7 +70,9 @@ public class ChannelsDevice {
 			try {
 				programInHDD = new FileLoader(programName);
 			} catch (Exception e) {
-				System.out.println("Problema skaitant programą iš išorinės atminties!");
+				Resource res = new Resource(ResourceType.LI_IN_MEM);
+				res.setDescriptor(RMMemory.loadStringToMemory("Problema skaitant programą iš išorinės atminties!"));
+				Core.resourceList.addResource(res);
 				e.printStackTrace();
 			}
 			while (!programInHDD.checkIfFileEnd()) {
