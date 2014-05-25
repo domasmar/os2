@@ -124,6 +124,8 @@ public class JobGovernor extends Process {
                 } else {
                     Core.processQueue.delete(vmProc.getPid());
                     progInHddRes.setParent(null);
+                    ProgramInHDDDescriptor des = (ProgramInHDDDescriptor) progInHddRes.getDescriptor();
+                    des.setFromJobToSwap(false);
                     Core.resourceList.deleteByInstance(memRes);
                     Core.resourceList.deleteByInstance(fromLoader);
                     this.changeStep(6);
