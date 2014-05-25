@@ -60,8 +60,8 @@ public class VMMemory {
 		CPU.setMODE((byte) this.get(i++));
 		CPU.setPI((byte) this.get(i++));
 		CPU.setSI((byte) this.get(i++));
-		CPU.setSP((byte) this.get(i++));
-		CPU.setSS((byte) this.get(i++));
+		CPU.setSP((short) this.get(i++));
+		CPU.setSS((short) this.get(i++));
 		CPU.setSTI((byte) this.get(i++));
 		CPU.setTI((byte) this.get(i++));
 	}
