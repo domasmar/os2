@@ -142,7 +142,6 @@ public class ProgramExecutor {
             return;
         }
         CPU.setPI((byte) 2); //jei blogas operacijos kodas
-        System.out.println(cmdBits);
         return;
     }
 
@@ -221,7 +220,7 @@ public class ProgramExecutor {
         }
 
         try {
-            int value = memory.get(variable);
+            int value = memory.get(CPU.getDS() + variable);
             memory.push(value);
         } catch (RuntimeException e) {
             CPU.setSTI((byte) 1);
@@ -241,7 +240,7 @@ public class ProgramExecutor {
 
         try {
             int value = memory.pop();
-            memory.set(variable, value);
+            memory.set(CPU.getDS() + variable, value);
         } catch (RuntimeException e) {
             CPU.setSTI((byte) 1);
         }
