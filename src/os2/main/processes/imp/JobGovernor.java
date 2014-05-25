@@ -113,10 +113,7 @@ public class JobGovernor extends Process {
                     break;
                 } else {
                     Core.processQueue.delete(vmProc.getPid());
-<<<<<<< HEAD
-=======
-                   // progInHddRes.setParent(null);
->>>>>>> 39be294f53b230e399b4547a6cd9ad0cad16d2d7
+
                     ProgramInHDDDescriptor des = (ProgramInHDDDescriptor) progInHddRes.getDescriptor();
                     des.setFromJobToSwap(false);
                     Core.resourceList.deleteByInstance(memRes);
