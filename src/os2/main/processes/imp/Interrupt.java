@@ -32,7 +32,8 @@ public class Interrupt extends Process {
                 }
                 break;
             case (1):
-                intDes = InterruptChecker.getInt();
+            	intDes = (InterruptDescriptor) interrupt.getDescriptor();
+            	//intDes = InterruptChecker.getInt();
                 this.changeStep(2);
                 break;
             case (2):
