@@ -88,9 +88,9 @@ public class ChannelsDevice {
 			programLength = endOfProgram + 1;
 			cleanProgram = new int[programLength];
 			System.arraycopy(program, 0, cleanProgram, 0, programLength);
-			for (int i = 0; i < cleanProgram.length; i++) {
-				System.out.println(cleanProgram[i]);
-			}
+//			for (int i = 0; i < cleanProgram.length; i++) {
+//				System.out.println(cleanProgram[i]);
+//			}
 			vmm.loadProgram(cleanProgram);
 		}
 		
