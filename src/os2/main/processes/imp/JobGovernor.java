@@ -47,7 +47,6 @@ public class JobGovernor extends Process {
                 }
 
                 memRes = new Resource(ResourceType.VIRT_MEM);
-                memRes.setParent(this);
 
                 VirtualMemoryDescriptor memDes = new VirtualMemoryDescriptor();
                 memRes.setDescriptor(memDes);
@@ -88,8 +87,8 @@ public class JobGovernor extends Process {
                     this.changeStep(3);
                 } else {
                     this.changeStep(2);
-                }
-                break;
+                }  
+                break;  
 
             /*Blokuojamės, kol nesužinom, jog loader'is baigė darbą               
              */
@@ -135,6 +134,8 @@ public class JobGovernor extends Process {
              jei galima tęsti einame į 4 case, jei ne į 6
              */
             case (6):
+                this.changeStep(6);
+                break;
             /*Laukiame, kol bus ištrinta */
         }
     }
