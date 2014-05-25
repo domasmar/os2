@@ -33,15 +33,18 @@ public class Interrupt extends Process {
                 break;
             case (1):
                 intDes = InterruptChecker.getInt();
+                this.changeStep(2);
                 break;
             case (2):
                 jobGovernor = interrupt.getParent();
+                this.changeStep(3);
                 break;
             case (3):
                 Resource fromInt = new Resource(ResourceType.FROM_INT);
                 fromInt.setDescriptor(intDes);
                 fromInt.setParent(jobGovernor);
                 Core.resourceList.addResource(fromInt);
+                this.changeStep(0);
                 break;
         }
     }
