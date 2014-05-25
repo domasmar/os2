@@ -1,30 +1,48 @@
 package os2.main.processes.imp;
 
+import os2.main.Core;
 import os2.main.processes.Process;
+import os2.main.resources.Resource;
+import os2.main.resources.ResourceType;
+import os2.main.resources.descriptors.InterruptDescriptor;
+import os2.main.software.executor.InterruptChecker;
 
 /**
- * Šio proceso paskirtis – reaguoti į pertraukimus, kilusius virtualios mašinos darbo metu.
+ * Šio proceso paskirtis – reaguoti į pertraukimus, kilusius virtualios mašinos
+ * darbo metu.
+ *
  * @author domas
  *
  */
 public class Interrupt extends Process {
 
-	@Override
-	public void nextStep() {
-		switch (this.step) {
-		case (0):
-			// Blokuotas, laukiam resurso "Pertraukimas"
-			break;
-		case (1):
-			// Pertraukimo tipo identifikavimas
-			break;
-		case (2):
-			// "JobGorvernor" nustatymas atsakingo už pertraukimą
-			break;
-		case (3):
-			// Sukuriamas "Iš interrupt" resursas skirtas konkrečiam "JobGovernor"
-			break;
-		}
-	}
+    private Resource interrupt;
+    private Process jobGovernor;
+    private InterruptDescriptor intDes;
 
+    @Override
+    public void nextStep() {
+        switch (this.step) {
+            case (0):
+                interrupt = Core.resourceList.searchResource(ResourceType.INT);
+                if (interrupt != null) {
+                    this.changeStep(1);
+                } else {
+                    this.changeStep(0);
+                }
+                break;
+            case (1):
+                intDes = InterruptChecker.getInt();
+                break;
+            case (2):
+                jobGovernor = interrupt.getParent();
+                break;
+            case (3):
+                Resource fromInt = new Resource(ResourceType.FROM_INT);
+                fromInt.setDescriptor(intDes);
+                fromInt.setParent(jobGovernor);
+                Core.resourceList.addResource(fromInt);
+                break;
+        }
+    }
 }

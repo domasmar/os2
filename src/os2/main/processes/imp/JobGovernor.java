@@ -9,7 +9,6 @@ import os2.main.resources.ResourceType;
 import os2.main.resources.descriptors.InterruptDescriptor;
 import os2.main.resources.descriptors.LoaderPacketDescriptor;
 import os2.main.resources.descriptors.ProgramInHDDDescriptor;
-import os2.main.resources.descriptors.VirtualMemoryDescriptor;
 import os2.main.software.executor.InterruptHandler;
 
 /**
@@ -46,13 +45,8 @@ public class JobGovernor extends Process {
                     break;
                 }
                 this.changeStep(1);
+                
                 break;
-
-            /* Sukuriame virtualios mašinos atmintį,
-             virtualios mašinos atminties resursą,
-             virtualios mašinos atminties resurso deskriptorių
-             ir patalpiname į resursų sąrašą
-             */
             case (1):
                 ProgramInHDDDescriptor progInHddDes = (ProgramInHDDDescriptor) progInHddRes.getDescriptor();
                 int[] filename = progInHddDes.getProgramName();
@@ -66,46 +60,34 @@ public class JobGovernor extends Process {
 
                 Core.resourceList.addResource(loaderPacket);
                 this.changeStep(2);
+                
                 break;
-
-            /* Iš resurso programa būgne pasiimame failo pavadinimą,
-             sukuriame krovimo paketo resursą su deskriptoriumi, kuriame patalpiname pavadinimą ir atminties objektą,
-             pridedame krov.paket.resurs. į sąrašą   
-             */
             case (2):
                 fromLoader = Core.resourceList.searchChildResource(this, ResourceType.PACK_FROM_LOAD);
                 if (fromLoader != null) {
                     this.changeStep(3);
                 } else {
                     this.changeStep(2);
-                }    
-                break;  
+                }
                 
-            /*Blokuojamės, kol nesužinom, jog loader'is baigė darbą               
-             */
-            case (3):    
+                break;
+            case (3):
                 vmProc = new VirtualMachine(vmm, this);
                 Core.processQueue.add(vmProc);
                 this.changeStep(4);
+                
                 break;
-
-            /* Sukuriam procesą "VirtualMachine",
-             jį padarome atminties resurso tėvu,
-             VM pridedame į procesų sąrašą
-             */
             case (4):
-                intRes = Core.resourceList.searchChildResource(this, ResourceType.INT);
+                intRes = Core.resourceList.searchChildResource(this, ResourceType.FROM_INT);
                 if (intRes != null) {
                     this.changeStep(5);
                 } else {
                     this.changeStep(4);
                 }
+                
                 break;
-
-            /* Laukiame virtualios mašinos sukurto interrupt resurso
-             */
             case (5):
-                InterruptDescriptor intDes = (InterruptDescriptor) intRes.getDescriptor();                
+                InterruptDescriptor intDes = (InterruptDescriptor) intRes.getDescriptor();
                 InterruptHandler handler = new InterruptHandler(intDes, this);
                 if (handler.fix()) {
                     intDes.setFixed(true);
@@ -120,15 +102,12 @@ public class JobGovernor extends Process {
                     Core.resourceList.deleteByInstance(fromLoader);
                     this.changeStep(6);
                 }
+                
                 break;
-
-            /* Perduodame interupto resursą jo tvarkytojui, 
-             jei galima tęsti einame į 4 case, jei ne į 6
-             */
             case (6):
                 this.changeStep(6);
+                
                 break;
-            /*Laukiame, kol bus ištrinta */
         }
     }
 }

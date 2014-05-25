@@ -24,7 +24,7 @@ public class VirtualMachine extends Process {
 
     private VMMemory vmm = null;
     private ProgramExecutor exec = null;
-    private Process parentOfVM= null;
+    private Process parentOfVM = null;
 
     public VirtualMachine(VMMemory vmm, Process parent) {
         this.vmm = vmm;
@@ -43,40 +43,24 @@ public class VirtualMachine extends Process {
                 } else {
                     this.changeStep(0);
                 }
-                break;
 
-            /* Pasiimame iš resursų sąrašo atmintį,
-             nustatome CPU mode,
-             sukuriame executorių   
-             */
+                break;
             case (1):
                 vmm.loadCPUState();
-                exec.executeNext();
-                InterruptDescriptor intDes = InterruptChecker.getInt();
-                if (intDes != null) {
-                    Resource inter = new Resource(ResourceType.INT);
-                    inter.setParent(parentOfVM);
-                    inter.setDescriptor(intDes);
-                    Core.resourceList.addResource(inter);
+                if (exec.executeNext()) {
+                    Resource interrupt = new Resource(ResourceType.INT);
+                    interrupt.setParent(parentOfVM);
+                    Core.resourceList.addResource(interrupt);
                     this.changeStep(2);
-                    vmm.saveCPUState();
-                    break;
                 } else {
                     this.changeStep(1);
-                    vmm.saveCPUState();
-                    break;
                 }
 
-            /* Užkraunam procesoriaus būseną,
-             įvykdom komandą,
-             tikrinam ar nekilo interuptas, 
-             jei kilo įdedame jį į resursų sąrašą, kad JG matytų,
-             išsaugome procesoriaus būseną
-             */
+                break;
             case (2):
-                Resource intFixed = Core.resourceList.searchChildResource(this, ResourceType.INT);
+                Resource intFixed = Core.resourceList.searchChildResource(this, ResourceType.FROM_INT);
                 if (intFixed != null) {
-                    intDes = (InterruptDescriptor) intFixed.getDescriptor();
+                    InterruptDescriptor intDes = (InterruptDescriptor) intFixed.getDescriptor();
                     if (intDes.getFixed() == true) {
                         this.changeStep(1);
                         Core.resourceList.deleteByInstance(intFixed);

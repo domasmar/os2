@@ -9,6 +9,7 @@ import os2.main.hardware.CPU.*;
 import os2.main.resources.Resource;
 import os2.main.resources.ResourceType;
 import os2.main.resources.descriptors.LineToPrintDescriptor;
+import os2.main.resources.descriptors.interfaces.ResourceDescriptorInterface;
 
 /**
  *
@@ -26,10 +27,10 @@ public class ProgramExecutor {
         this.parentOfVM = parentOfVM;
     }
 
-    public void executeNext() throws RuntimeException {
+    public boolean executeNext() throws RuntimeException {
         if (CPU.getTIMER() == 0) {
             CPU.setTI((byte) 1);
-            return;
+            return true;
         } else {
             CPU.setTIMER(CPU.getTIMER() - 1);
         }
@@ -41,112 +42,98 @@ public class ProgramExecutor {
         int valueInt = Integer.parseInt(valueBits, 2);
 
         if (cmdInt == CommandBytecode.ADD) {
-            cmdAdd();
-            return;
+            return cmdAdd();
         }
 
         if (cmdInt == CommandBytecode.SUB) {
-            cmdSub();
-            return;
+            return cmdSub();
         }
 
         if (cmdInt == CommandBytecode.CMP) {
-            cmdCmp();
-            return;
+            return cmdCmp();
         }
 
         if (cmdInt == CommandBytecode.STOP) {
             cmdStop();
-            return;
+            return true;
         }
 
         if (cmdInt == CommandBytecode.MOV_AX) {
             valueInt = memory.get(CPU.getCS() + CPU.getIP() + 1);
             cmdMovAx(valueInt);
-            return;
+            return false;
         }
 
         if (cmdInt == CommandBytecode.MOV_BX) {
             valueInt = memory.get(CPU.getCS() + CPU.getIP() + 1);
             cmdMovBx(valueInt);
-            return;
+            return false;
         }
 
         if (cmdInt == CommandBytecode.LOA_AX) {
-            cmdLoaAx(valueInt);
-            return;
+            return cmdLoaAx(valueInt);
         }
 
         if (cmdInt == CommandBytecode.LOA_BX) {
-            cmdLoaBx(valueInt);
-            return;
+            return cmdLoaBx(valueInt);
         }
 
         if (cmdInt == CommandBytecode.STO_AX) {
-            cmdStoAx(valueInt);
-            return;
+            return cmdStoAx(valueInt);
         }
 
         if (cmdInt == CommandBytecode.STO_BX) {
-            cmdStoBx(valueInt);
-            return;
+            return cmdStoBx(valueInt);
         }
 
         if (cmdInt == CommandBytecode.PUSH) {
-            cmdPush(valueInt);
-            return;
+            return cmdPush(valueInt);
         }
 
         if (cmdInt == CommandBytecode.POP) {
-            cmdPop(valueInt);
-            return;
+            return cmdPop(valueInt);
         }
 
         if (cmdInt == CommandBytecode.JA) {
-            cmdJa(valueInt);
-            return;
+            return cmdJa(valueInt);
         }
 
         if (cmdInt == CommandBytecode.JB) {
-            cmdJb(valueInt);
-            return;
+            return cmdJb(valueInt);
         }
 
         if (cmdInt == CommandBytecode.JE) {
-            cmdJe(valueInt);
-            return;
+            return cmdJe(valueInt);
         }
 
         if (cmdInt == CommandBytecode.JMP) {
-            cmdJmp(valueInt);
-            return;
+            return cmdJmp(valueInt);
         }
 
         if (cmdInt == CommandBytecode.JNE) {
-            cmdJne(valueInt);
-            return;
+            return cmdJne(valueInt);
         }
 
         if (cmdInt == CommandBytecode.OUTR_AX) {
             cmdOutrAx();
-            return;
+            return true;
         }
 
         if (cmdInt == CommandBytecode.OUTR_BX) {
             cmdOutrBx();
-            return;
+            return true;
         }
 
         if (cmdInt == CommandBytecode.OUTM) {
             cmdOutM(valueInt);
-            return;
+            return true;
         }
         CPU.setPI((byte) 2); //jei blogas operacijos kodas
-        return;
+        return true;
     }
 
 //******************************************************************************
-    private void cmdMovAx(int variable) throws RuntimeException {
+    private void cmdMovAx(int variable) {
         CPU.setAX(variable);
 
         short nextCmdAddr = (short) (CPU.getIP() + 2);
@@ -155,7 +142,7 @@ public class ProgramExecutor {
         lastCmd.variable = variable;
     }
 
-    private void cmdMovBx(int variable) throws RuntimeException {
+    private void cmdMovBx(int variable) {
         CPU.setBX(variable);
 
         short nextCmdAddr = (short) (CPU.getIP() + 2);
@@ -164,34 +151,36 @@ public class ProgramExecutor {
         lastCmd.variable = variable;
     }
 
-    private void cmdLoaAx(int variable) throws RuntimeException {
+    private boolean cmdLoaAx(int variable) {
         if (variable >= CPU.getSS()) {
             CPU.setPI((byte) 1);
-            throw new RuntimeException("Adresas išlipa iš DS segmento!");
+            return true;
         }
         CPU.setAX(memory.get(variable));
         short nextCmdAddr = (short) (CPU.getIP() + 1);
         CPU.setIP(nextCmdAddr);
         lastCmd.command = LOA_AX;
         lastCmd.variable = variable;
+        return false;
     }
 
-    private void cmdLoaBx(int variable) throws RuntimeException {
+    private boolean cmdLoaBx(int variable) {
         if (variable >= CPU.getSS()) {
             CPU.setPI((byte) 1);
-            throw new RuntimeException("Adresas išlipa iš DS segmento!");
+            return true;
         }
         CPU.setBX(memory.get(variable));
         short nextCmdAddr = (short) (CPU.getIP() + 1);
         CPU.setIP(nextCmdAddr);
         lastCmd.command = LOA_BX;
         lastCmd.variable = variable;
+        return false;
     }
 
-    private void cmdStoAx(int variable) throws RuntimeException {
+    private boolean cmdStoAx(int variable) {
         if (variable >= CPU.getSS()) {
             CPU.setPI((byte) 1);
-            throw new RuntimeException("Adresas išlipa iš DS segmento!");
+            return true;
         }
         memory.set(variable, CPU.getAX());
 
@@ -199,24 +188,26 @@ public class ProgramExecutor {
         CPU.setIP(nextCmdAddr);
         lastCmd.command = STO_AX;
         lastCmd.variable = variable;
+        return false;
     }
 
-    private void cmdStoBx(int variable) throws RuntimeException {
+    private boolean cmdStoBx(int variable) {
         if (variable >= CPU.getSS()) {
             CPU.setPI((byte) 1);
-            throw new RuntimeException("Adresas išlipa iš DS segmento!");
+            return true;
         }
         memory.set(variable, CPU.getBX());
         short nextCmdAddr = (short) (CPU.getIP() + 1);
         CPU.setIP(nextCmdAddr);
         lastCmd.command = STO_BX;
         lastCmd.variable = variable;
+        return false;
     }
 
-    private void cmdPush(int variable) throws RuntimeException {
+    private boolean cmdPush(int variable) {
         if (variable >= CPU.getSS()) {
             CPU.setPI((byte) 1);
-            throw new RuntimeException("Adresas išlipa iš DS segmento!");
+            return true;
         }
 
         try {
@@ -224,18 +215,20 @@ public class ProgramExecutor {
             memory.push(value);
         } catch (RuntimeException e) {
             CPU.setSTI((byte) 1);
+            return true;
         }
 
         short nextCmdAddr = (short) (CPU.getIP() + 1);
         CPU.setIP(nextCmdAddr);
         lastCmd.command = PUSH;
         lastCmd.variable = variable;
+        return false;
     }
 
-    private void cmdPop(int variable) throws RuntimeException {
+    private boolean cmdPop(int variable) {
         if (variable >= CPU.getSS()) {
             CPU.setPI((byte) 1);
-            throw new RuntimeException("Adresas išlipa iš DS segmento!");
+            return true;
         }
 
         try {
@@ -243,18 +236,20 @@ public class ProgramExecutor {
             memory.set(CPU.getDS() + variable, value);
         } catch (RuntimeException e) {
             CPU.setSTI((byte) 1);
+            return true;
         }
 
         short nextCmdAddr = (short) (CPU.getIP() + 1);
         CPU.setIP(nextCmdAddr);
         lastCmd.command = POP;
         lastCmd.variable = variable;
+        return false;
     }
 
-    private void cmdJa(int variable) throws RuntimeException {
+    private boolean cmdJa(int variable) {
         if (((CPU.getCS() + variable) >= 255) || (variable < 0)) {
             CPU.setPI((byte) 1);
-            throw new RuntimeException("Jump komanda išlipa iš CS segmento!");
+            return true;
         }
 
         if (CPU.getC() == 1) {
@@ -266,23 +261,25 @@ public class ProgramExecutor {
 
         lastCmd.command = JA;
         lastCmd.variable = variable;
+        return false;
     }
 
-    private void cmdJmp(int variable) throws RuntimeException {
+    private boolean cmdJmp(int variable) {
         if (((CPU.getCS() + variable) >= 255) || (variable < 0)) {
             CPU.setPI((byte) 1);
-            throw new RuntimeException("Jump komanda išlipa iš CS segmento!");
+            return true;
         }
         CPU.setIP((short) variable);
 
         lastCmd.command = JMP;
         lastCmd.variable = variable;
+        return false;
     }
 
-    private void cmdJb(int variable) throws RuntimeException {
+    private boolean cmdJb(int variable) {
         if (((CPU.getCS() + variable) >= 255) || (variable < 0)) {
             CPU.setPI((byte) 1);
-            throw new RuntimeException("Jump komanda išlipa iš CS segmento!");
+            return true;
         }
 
         if (CPU.getC() == 2) {
@@ -293,12 +290,13 @@ public class ProgramExecutor {
         }
         lastCmd.command = JB;
         lastCmd.variable = variable;
+        return false;
     }
 
-    private void cmdJe(int variable) throws RuntimeException {
+    private boolean cmdJe(int variable) {
         if (((CPU.getCS() + variable) >= 255) || (variable < 0)) {
             CPU.setPI((byte) 1);
-            throw new RuntimeException("Jump komanda išlipa iš CS segmento!");
+            return true;
         }
 
         if (CPU.getC() == 0) {
@@ -308,12 +306,13 @@ public class ProgramExecutor {
             CPU.setIP(nextCmdAddr);
         }
         lastCmd.variable = variable;
+        return false;
     }
 
-    private void cmdJne(int variable) throws RuntimeException {
+    private boolean cmdJne(int variable) {
         if (((CPU.getCS() + variable) >= 255) || (variable < 0)) {
             CPU.setPI((byte) 1);
-            throw new RuntimeException("Jump komanda išlipa iš CS segmento!");
+            return true;
         }
 
         if (CPU.getC() == 1 || CPU.getC() == 2) {
@@ -324,9 +323,10 @@ public class ProgramExecutor {
         }
         lastCmd.command = JNE;
         lastCmd.variable = variable;
+        return false;
     }
 
-    private void cmdOutrAx() throws RuntimeException {
+    private void cmdOutrAx() {
         CPU.setSI((byte) 2);
         short nextCmdAddr = (short) (CPU.getIP() + 1);
         CPU.setIP(nextCmdAddr);
@@ -335,10 +335,11 @@ public class ProgramExecutor {
         LineToPrintDescriptor liDes = new LineToPrintDescriptor();
         liDes.setLine(CPU.getAX());
         line.setParent(parentOfVM);
+        line.setDescriptor((ResourceDescriptorInterface) liDes);
         Core.resourceList.addResource(line);
     }
 
-    private void cmdOutrBx() throws RuntimeException {
+    private void cmdOutrBx() {
         CPU.setSI((byte) 2);
         short nextCmdAddr = (short) (CPU.getIP() + 1);
         CPU.setIP(nextCmdAddr);
@@ -347,10 +348,11 @@ public class ProgramExecutor {
         LineToPrintDescriptor liDes = new LineToPrintDescriptor();
         liDes.setLine(CPU.getBX());
         line.setParent(parentOfVM);
+        line.setDescriptor((ResourceDescriptorInterface) liDes);
         Core.resourceList.addResource(line);
     }
 
-    private void cmdOutM(int variable) throws RuntimeException {
+    private void cmdOutM(int variable) {
         CPU.setSI((byte) 2);
         short nextCmdAddr = (short) (CPU.getIP() + 1);
         CPU.setIP(nextCmdAddr);
@@ -360,50 +362,138 @@ public class ProgramExecutor {
         LineToPrintDescriptor liDes = new LineToPrintDescriptor();
         liDes.setLine(memory.get(variable));
         line.setParent(parentOfVM);
+        line.setDescriptor((ResourceDescriptorInterface) liDes);
         Core.resourceList.addResource(line);
     }
 
-    private void cmdAdd() throws RuntimeException {
-        int firstEl = memory.get(CPU.getSS() + CPU.getSP());  //gal reikės pasinaudot stack metodais siekiant išvengti klaidų neapdorojimo
-        int secondEl = memory.get(CPU.getSS() + CPU.getSP() - 1);
-        int sum = firstEl + secondEl;
-        memory.set(CPU.getSS() + CPU.getSP(), sum);
+    private boolean cmdAdd() {
+        int firstEl;
+        int secondEl;
+
+        try {
+            firstEl = memory.pop();
+        } catch (RuntimeException e) {
+            return true;
+        }
+
+        try {
+            secondEl = memory.pop();
+        } catch (RuntimeException e) {
+            return true;
+        }
+
+        try {
+            memory.push(secondEl);
+        } catch (RuntimeException e) {
+            return true;
+        }
+
+        try {
+            memory.push(firstEl);
+        } catch (RuntimeException e) {
+            return true;
+        }
+
+        try {
+            memory.push(firstEl + secondEl);
+        } catch (RuntimeException e) {
+            return true;
+        }
 
         short nextCmdAddr = (short) (CPU.getIP() + 1);
         CPU.setIP(nextCmdAddr);
         lastCmd.command = ADD;
+        return false;
     }
 
-    private void cmdSub() throws RuntimeException {
-        int firstEl = memory.get(CPU.getSS() + CPU.getSP());
-        int secondEl = memory.get(CPU.getSS() + CPU.getSP() - 1);
-        int diff = firstEl - secondEl;
-        memory.set(CPU.getSS() + CPU.getSP(), diff);
+    private boolean cmdSub() {
+        int firstEl;
+        int secondEl;
+
+        try {
+            firstEl = memory.pop();
+        } catch (RuntimeException e) {
+            return true;
+        }
+
+        try {
+            secondEl = memory.pop();
+        } catch (RuntimeException e) {
+            return true;
+        }
+
+        try {
+            memory.push(secondEl);
+        } catch (RuntimeException e) {
+            return true;
+        }
+
+        try {
+            memory.push(firstEl);
+        } catch (RuntimeException e) {
+            return true;
+        }
+
+        try {
+            memory.push(firstEl - secondEl);
+        } catch (RuntimeException e) {
+            return true;
+        }
 
         short nextCmdAddr = (short) (CPU.getIP() + 1);
         CPU.setIP(nextCmdAddr);
-        lastCmd.command = SUB;
+        lastCmd.command = ADD;
+        return false;
     }
 
-    private void cmdCmp() throws RuntimeException {
-        if ((memory.get(CPU.getSS() + CPU.getSP())) == (memory.get(CPU.getSS() + CPU.getSP() - 1))) {
+    private boolean cmdCmp() {
+        int firstEl;
+        int secondEl;
+
+        try {
+            firstEl = memory.pop();
+        } catch (RuntimeException e) {
+            return true;
+        }
+
+        try {
+            secondEl = memory.pop();
+        } catch (RuntimeException e) {
+            return true;
+        }
+        
+         try {
+            memory.push(secondEl);
+        } catch (RuntimeException e) {
+            return true;
+        }
+
+        try {
+            memory.push(firstEl);
+        } catch (RuntimeException e) {
+            return true;
+        }
+        
+        
+        if (firstEl == secondEl) {
             CPU.setC((byte) 0);
         }
 
-        if ((memory.get(CPU.getSS() + CPU.getSP())) > (memory.get(CPU.getSS() + CPU.getSP() - 1))) {
+        if (firstEl > secondEl) {
             CPU.setC((byte) 1);
         }
 
-        if ((memory.get(CPU.getSS() + CPU.getSP())) < (memory.get(CPU.getSS() + CPU.getSP() - 1))) {
+        if (firstEl < secondEl) {
             CPU.setC((byte) 2);
         }
 
         short nextCmdAddr = (short) (CPU.getIP() + 1);
         CPU.setIP(nextCmdAddr);
         lastCmd.command = CMP;
+        return false;
     }
 
-    private void cmdStop() throws RuntimeException {
+    private void cmdStop() {
         short nextCmdAddr = (short) (CPU.getIP() + 1);
         CPU.setIP(nextCmdAddr);
         CPU.setEND((byte) 1);
