@@ -37,6 +37,7 @@ public class Interrupt extends Process {
                 break;
             case (2):
                 jobGovernor = interrupt.getParent();
+                Core.resourceList.deleteByInstance(interrupt);
                 this.changeStep(3);
                 break;
             case (3):

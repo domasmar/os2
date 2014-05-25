@@ -60,7 +60,7 @@ public class VirtualMachine extends Process {
 
                 break;
             case (2):
-                Resource intFixed = Core.resourceList.searchChildResource(this, ResourceType.FROM_INT);
+                Resource intFixed = Core.resourceList.searchChildResource(parentOfVM, ResourceType.FROM_INT);
                 if (intFixed != null) {
                     InterruptDescriptor intDes = (InterruptDescriptor) intFixed.getDescriptor();
                     if (intDes.getFixed() == true) {
