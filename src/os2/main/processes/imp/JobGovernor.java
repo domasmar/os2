@@ -103,6 +103,7 @@ public class JobGovernor extends Process {
                     this.changeStep(6);
                 }
                 
+                Core.resourceList.deleteByInstance(intRes);
                 break;
             case (6):
                 this.changeStep(6);
