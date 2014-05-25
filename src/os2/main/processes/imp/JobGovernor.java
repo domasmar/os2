@@ -91,11 +91,13 @@ public class JobGovernor extends Process {
                 InterruptHandler handler = new InterruptHandler(intDes, this);
                 if (handler.fix()) {
                     intDes.setFixed(true);
+                    VirtualMachine vmProcAsVM = (VirtualMachine) vmProc;
+                    vmProcAsVM.setStep(1);
+                    Core.resourceList.deleteByInstance(intRes);
                     this.changeStep(4);
                     break;
                 } else {
                     Core.processQueue.delete(vmProc.getPid());
-
                     ProgramInHDDDescriptor des = (ProgramInHDDDescriptor) progInHddRes.getDescriptor();
                     des.setFromJobToSwap(false);
                     Core.resourceList.deleteByInstance(memRes);

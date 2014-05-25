@@ -21,19 +21,23 @@ import os2.main.software.executor.ProgramExecutor;
  *
  */
 public class VirtualMachine extends Process {
-
+    
     private VMMemory vmm = null;
     private ProgramExecutor exec = null;
     private Process parentOfVM = null;
-
+    
     public VirtualMachine(VMMemory vmm, Process parent) {
         this.vmm = vmm;
         this.parentOfVM = parent;
     }
-
+    
+    public void setStep(int step){
+        this.changeStep(step);
+    }
+    
     @Override
     public void nextStep() {
-
+        
         switch (this.step) {
             case (0):
                 if (vmm != null) {
@@ -43,7 +47,7 @@ public class VirtualMachine extends Process {
                 } else {
                     this.changeStep(0);
                 }
-
+                
                 break;
             case (1):
                 vmm.loadCPUState();
@@ -57,26 +61,12 @@ public class VirtualMachine extends Process {
                     vmm.saveCPUState();
                     this.changeStep(1);
                 }
-
+                
                 break;
             case (2):
-                Resource intFixed = Core.resourceList.searchChildResource(parentOfVM, ResourceType.FROM_INT);
-                if (intFixed != null) {
-                    InterruptDescriptor intDes = (InterruptDescriptor) intFixed.getDescriptor();
-                    if (intDes.getFixed() == true) {
-                        this.changeStep(1);
-                        Core.resourceList.deleteByInstance(intFixed);
-                    } else {
-                        this.changeStep(2);
-                    }
-                } else {
-                    this.changeStep(2);
-                }
+                this.changeStep(2);
+                
                 break;
-            /* Tikriname ar interruptas sutvarkytas,
-             jei ne laukiame, kol bus sutvarkytas,
-             jei sutvakrytas tęsiame darbą 
-             */
         }
     }
 }
