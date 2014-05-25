@@ -67,6 +67,8 @@ public class ChannelsDevice {
 			FileLoader programInHDD = null;
 			int[] program = new int[0];
 			int[] programBlock;
+			int[] cleanProgram;
+			int programLength;
 			try {
 				programInHDD = new FileLoader(programName);
 			} catch (Exception e) {
@@ -79,10 +81,17 @@ public class ChannelsDevice {
 				programBlock = programInHDD.getBlockOfFile();
 				program = concat(program, programBlock);
 			}
-			for (int i = 0; i < program.length; i++) {
-				System.out.println(program[i]);
+			int endOfProgram = program.length - 1;
+			while (program[endOfProgram] == 0) {
+				endOfProgram--;
 			}
-			vmm.loadProgram(program);
+			programLength = endOfProgram + 1;
+			cleanProgram = new int[programLength];
+			System.arraycopy(program, 0, cleanProgram, 0, programLength);
+			for (int i = 0; i < cleanProgram.length; i++) {
+				System.out.println(cleanProgram[i]);
+			}
+			vmm.loadProgram(cleanProgram);
 		}
 		
 		/* Kopijavimas iš supervizorinės atminties į išvedimo srautą */
