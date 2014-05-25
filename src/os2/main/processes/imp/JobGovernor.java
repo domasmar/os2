@@ -45,14 +45,6 @@ public class JobGovernor extends Process {
                     this.changeStep(0);
                     break;
                 }
-
-                memRes = new Resource(ResourceType.VIRT_MEM);
-
-                VirtualMemoryDescriptor memDes = new VirtualMemoryDescriptor();
-                memRes.setDescriptor(memDes);
-                memDes.setMemory(vmm);
-
-                Core.resourceList.addResource(memRes);
                 this.changeStep(1);
                 break;
 
@@ -87,14 +79,13 @@ public class JobGovernor extends Process {
                     this.changeStep(3);
                 } else {
                     this.changeStep(2);
-                }  
+                }    
                 break;  
-
+                
             /*Blokuojamės, kol nesužinom, jog loader'is baigė darbą               
              */
-            case (3):
-                vmProc = new VirtualMachine(this);
-                memRes.setParent(vmProc);
+            case (3):    
+                vmProc = new VirtualMachine(vmm, this);
                 Core.processQueue.add(vmProc);
                 this.changeStep(4);
                 break;
@@ -123,7 +114,6 @@ public class JobGovernor extends Process {
                     break;
                 } else {
                     Core.processQueue.delete(vmProc.getPid());
-                    progInHddRes.setParent(null);
                     ProgramInHDDDescriptor des = (ProgramInHDDDescriptor) progInHddRes.getDescriptor();
                     des.setFromJobToSwap(false);
                     Core.resourceList.deleteByInstance(memRes);

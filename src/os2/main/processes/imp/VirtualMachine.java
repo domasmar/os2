@@ -24,9 +24,10 @@ public class VirtualMachine extends Process {
 
     private VMMemory vmm = null;
     private ProgramExecutor exec = null;
-    private Process parentOfVM;
+    private Process parentOfVM= null;
 
-    public VirtualMachine(Process parent) {
+    public VirtualMachine(VMMemory vmm, Process parent) {
+        this.vmm = vmm;
         this.parentOfVM = parent;
     }
 
@@ -35,11 +36,8 @@ public class VirtualMachine extends Process {
 
         switch (this.step) {
             case (0):
-                Resource vm = Core.resourceList.searchChildResource(this, ResourceType.VIRT_MEM);
-                if (vm != null) {
+                if (vmm != null) {
                     CPU.setMODE((byte) 0);
-                    VirtualMemoryDescriptor des = (VirtualMemoryDescriptor) vm.getDescriptor();
-                    vmm = des.getMemory();
                     exec = new ProgramExecutor(vmm, parentOfVM);
                     this.changeStep(1);
                 } else {
