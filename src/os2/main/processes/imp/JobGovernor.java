@@ -69,7 +69,6 @@ public class JobGovernor extends Process {
                 loaderPacket.setParent(this);
                 LoaderPacketDescriptor loadDes = new LoaderPacketDescriptor();
                 loaderPacket.setDescriptor(loadDes);
-
                 loadDes.setMemory(vmm);
                 loadDes.setFilename(filename);
 
@@ -123,7 +122,7 @@ public class JobGovernor extends Process {
                     break;
                 } else {
                     Core.processQueue.delete(vmProc.getPid());
-                    progInHddRes.setParent(null);
+                   // progInHddRes.setParent(null);
                     ProgramInHDDDescriptor des = (ProgramInHDDDescriptor) progInHddRes.getDescriptor();
                     des.setFromJobToSwap(false);
                     Core.resourceList.deleteByInstance(memRes);

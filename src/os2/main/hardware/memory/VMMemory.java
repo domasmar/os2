@@ -18,6 +18,7 @@ public class VMMemory {
 	}
 
 	private int getRealAddress(int index) {
+		CPU.setPTR(this.ptr);
 		int ptrA2 = CPU.getPTR() / 16 % 16;
 		int ptrA3 = CPU.getPTR() % 16;
 		int realBlock = RMMemory.get(RMMemory.MEMORY_SIZE + ptrA2 * 16 + ptrA3 + index / 16);
