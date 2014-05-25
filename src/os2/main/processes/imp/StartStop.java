@@ -37,7 +37,7 @@ public class StartStop extends Process {
 			Core.processQueue.add(new JobToSwap());
 			Core.processQueue.add(new Loader());
 			Core.processQueue.add(new MainProc());
-//			Core.processQueue.add(new Interrupt());
+			Core.processQueue.add(new Interrupt());
 			Core.processQueue.add(new PrintLine());
 			this.changeStep(this.step + 1);
 			break;
