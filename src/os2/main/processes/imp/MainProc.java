@@ -35,10 +35,10 @@ public class MainProc extends Process {
 			// Tikrinam vygdymo laiką
 			// step = time > 0 ? 2 : 3
 			res = Core.resourceList.searchChildResource(null, ResourceType.PROGRAM_IN_HDD);
-			res.setParent(this);
 			des = (ProgramInHDDDescriptor) res.getDescriptor();
 			if (des.isFromJobToSwap()) {
 				this.changeStep(2);
+				res.setParent(this);
 			} else {
 				this.resourceToDestroy = res;
 				this.pidToDestroy = resourceToDestroy.getParent().getPid();

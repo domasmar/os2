@@ -15,8 +15,9 @@ public abstract class Process {
 	public abstract void nextStep();
 	
 	public long getPriority() {
-		long timeWithoutWork = (System.nanoTime() - startTime); 
-		return timeWithoutWork;
+		//long timeWithoutWork = (System.nanoTime() - startTime); 
+		//return timeWithoutWork;
+		return this.priority;
 	}
 
 	public void setPriority(int priority) {
@@ -25,7 +26,8 @@ public abstract class Process {
 	
 
 	protected void changeStep(int i) {
-		this.startTime = System.nanoTime();
+		this.priority--;
+		//this.startTime = System.nanoTime();
 		this.step = i;		
 	}
 
