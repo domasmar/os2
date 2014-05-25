@@ -373,30 +373,35 @@ public class ProgramExecutor {
         try {
             firstEl = memory.pop();
         } catch (RuntimeException e) {
+            CPU.setSTI((byte) 1);
             return true;
         }
 
         try {
             secondEl = memory.pop();
         } catch (RuntimeException e) {
+            CPU.setSTI((byte) 1);
             return true;
         }
 
         try {
             memory.push(secondEl);
         } catch (RuntimeException e) {
+            CPU.setSTI((byte) 1);
             return true;
         }
 
         try {
             memory.push(firstEl);
         } catch (RuntimeException e) {
+            CPU.setSTI((byte) 1);
             return true;
         }
 
         try {
             memory.push(firstEl + secondEl);
         } catch (RuntimeException e) {
+            CPU.setSTI((byte) 1);
             return true;
         }
 
@@ -413,30 +418,35 @@ public class ProgramExecutor {
         try {
             firstEl = memory.pop();
         } catch (RuntimeException e) {
+            CPU.setSTI((byte) 1);
             return true;
         }
 
         try {
             secondEl = memory.pop();
         } catch (RuntimeException e) {
+            CPU.setSTI((byte) 1);
             return true;
         }
 
         try {
             memory.push(secondEl);
         } catch (RuntimeException e) {
+            CPU.setSTI((byte) 1);
             return true;
         }
 
         try {
             memory.push(firstEl);
         } catch (RuntimeException e) {
+            CPU.setSTI((byte) 1);
             return true;
         }
 
         try {
             memory.push(firstEl - secondEl);
         } catch (RuntimeException e) {
+            CPU.setSTI((byte) 1);
             return true;
         }
 
@@ -453,24 +463,28 @@ public class ProgramExecutor {
         try {
             firstEl = memory.pop();
         } catch (RuntimeException e) {
+            CPU.setSTI((byte) 1);
             return true;
         }
 
         try {
             secondEl = memory.pop();
         } catch (RuntimeException e) {
+            CPU.setSTI((byte) 1);
             return true;
         }
         
          try {
             memory.push(secondEl);
         } catch (RuntimeException e) {
+            CPU.setSTI((byte) 1);
             return true;
         }
 
         try {
             memory.push(firstEl);
         } catch (RuntimeException e) {
+            CPU.setSTI((byte) 1);
             return true;
         }
         
