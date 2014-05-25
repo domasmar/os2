@@ -51,8 +51,10 @@ public class VirtualMachine extends Process {
                     Resource interrupt = new Resource(ResourceType.INT);
                     interrupt.setParent(parentOfVM);
                     Core.resourceList.addResource(interrupt);
+                    vmm.saveCPUState();
                     this.changeStep(2);
                 } else {
+                    vmm.saveCPUState();
                     this.changeStep(1);
                 }
 
