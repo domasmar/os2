@@ -55,7 +55,6 @@ public class VirtualMachine extends Process {
                     Resource interrupt = new Resource(ResourceType.INT);
                     interrupt.setParent(parentOfVM);
                     interrupt.setDescriptor(InterruptChecker.getInt());
-                    System.out.println(InterruptChecker.getInt().getType());
                     Core.resourceList.addResource(interrupt);
                     vmm.saveCPUState();
                     this.changeStep(2);
