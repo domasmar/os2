@@ -9,7 +9,7 @@ import os2.main.resources.descriptors.interfaces.ResourceDescriptorInterface;
 public class InterruptDescriptor implements ResourceDescriptorInterface {
 
     public enum Type {
-        IOI, END, PI, SI, TI, STI
+        END, PI, SI, TI, STI
     }
 
     private Type type;

@@ -328,7 +328,6 @@ public class ProgramExecutor {
 
     private void cmdOutrAx() throws RuntimeException {
         CPU.setSI((byte) 2);
-        CPU.setIOI((byte) 2);
         short nextCmdAddr = (short) (CPU.getIP() + 1);
         CPU.setIP(nextCmdAddr);
         lastCmd.command = OUTR_AX;
@@ -341,7 +340,6 @@ public class ProgramExecutor {
 
     private void cmdOutrBx() throws RuntimeException {
         CPU.setSI((byte) 2);
-        CPU.setIOI((byte) 2);
         short nextCmdAddr = (short) (CPU.getIP() + 1);
         CPU.setIP(nextCmdAddr);
         lastCmd.command = OUTR_BX;
@@ -354,7 +352,6 @@ public class ProgramExecutor {
 
     private void cmdOutM(int variable) throws RuntimeException {
         CPU.setSI((byte) 2);
-        CPU.setIOI((byte) 2);
         short nextCmdAddr = (short) (CPU.getIP() + 1);
         CPU.setIP(nextCmdAddr);
         lastCmd.command = OUTM;

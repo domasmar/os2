@@ -12,12 +12,7 @@ public class InterruptChecker {
     public static InterruptDescriptor getInt() {
         InterruptDescriptor des = null;
 
-        if (CPU.getIOI() != 0) {
-            des = new InterruptDescriptor();
-            des.setType(InterruptDescriptor.Type.IOI);
-            des.setValue(CPU.getIOI());
-            des.setFixed(false);
-        } else if (CPU.getEND() != 0) {
+        if (CPU.getEND() != 0) {
             des = new InterruptDescriptor();
             des.setType(InterruptDescriptor.Type.END);
             des.setValue(CPU.getEND());

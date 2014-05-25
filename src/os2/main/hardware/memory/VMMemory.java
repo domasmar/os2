@@ -56,7 +56,6 @@ public class VMMemory {
 		CPU.setCS((short) this.get(i++));
 		CPU.setDS((short) this.get(i++));
 		CPU.setEND((byte) this.get(i++));
-		CPU.setIOI((byte) this.get(i++));
 		CPU.setIP((byte) this.get(i++));
 		CPU.setMODE((byte) this.get(i++));
 		CPU.setPI((byte) this.get(i++));
@@ -79,7 +78,6 @@ public class VMMemory {
 		this.set(i++, CPU.getCS());
 		this.set(i++, CPU.getDS());
 		this.set(i++, CPU.getEND());
-		this.set(i++, CPU.getIOI());
 		this.set(i++, CPU.getIP());
 		this.set(i++, CPU.getMODE());
 		this.set(i++, CPU.getPI());
