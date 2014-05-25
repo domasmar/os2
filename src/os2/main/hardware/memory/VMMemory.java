@@ -18,10 +18,10 @@ public class VMMemory {
 	}
 
 	private int getRealAddress(int index) {
-		int ptrA2 = this.ptr / 16 % 16;
-		int ptrA3 = this.ptr % 16;
-		int realBlock = RMMemory.get((16 * ptrA2 + ptrA3) * 16 + index / 16
-				+ RMMemory.MEMORY_SIZE);
+		int ptrA2 = CPU.getPTR() / 16 % 16;
+		int ptrA3 = CPU.getPTR() % 16;
+		int realBlock = RMMemory.get(RMMemory.MEMORY_SIZE + ptrA2 * 16 + ptrA3 + index / 16);
+		
 		return realBlock * 16 + index % 16;
 	}
 
@@ -113,6 +113,7 @@ public class VMMemory {
 		}
 		CPU.setCS((short) (VIRTUAL_MEMORY_SIZE - i));
 		this.saveCPUState();
+
 	}
 
 	public void destroy() {
@@ -121,7 +122,7 @@ public class VMMemory {
 		}
 		RMMemory.clearPage(this.pageNumber);
 	}
-	
+
 	public void push(int value) {
 		int sp = CPU.getSP();
 		if (sp + CPU.getSS() + 1 >= CPU.getCS()) {
@@ -130,7 +131,7 @@ public class VMMemory {
 		this.set(CPU.getSS() + sp + 1, value);
 		CPU.setSP((short) (sp + 1));
 	}
-	
+
 	public int pop() {
 		int sp = CPU.getSP();
 		if (sp - 1 < 0) {

@@ -63,9 +63,9 @@ public class RMMemory {
 		return -1;
 	}
 
-	private static boolean checkIfUsed(int value) {
+	private static boolean isUsed(int value) {
 		for (int i = MEMORY_SIZE; i < MEMORY_SIZE + BLOCK_SIZE * BLOCK_SIZE; i++) {
-			if (get(i) != value) {
+			if (get(i) == value) {
 				return true;
 			}
 		}
@@ -78,7 +78,7 @@ public class RMMemory {
 			do {
 				Random rand = new Random();
 				guess = rand.nextInt(MEMORY_SIZE / 16);
-			} while (!checkIfUsed(guess));
+			} while (isUsed(guess));
 			set(i + MEMORY_SIZE, guess);
 		}
 		return (BLOCK_SIZE - 1) * 16 * 16 + start;
