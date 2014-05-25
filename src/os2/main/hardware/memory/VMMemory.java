@@ -149,5 +149,9 @@ public class VMMemory {
 		}
 		return r;
 	}
+	
+	public int getPTR() {
+		return this.ptr;
+	}
 
 }
