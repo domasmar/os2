@@ -329,41 +329,41 @@ public class ProgramExecutor {
     private void cmdOutrAx() {
         CPU.setSI((byte) 2);
         short nextCmdAddr = (short) (CPU.getIP() + 1);
-        CPU.setIP(nextCmdAddr);
-        lastCmd.command = OUTR_AX;
+        CPU.setIP(nextCmdAddr);  
         Resource line = new Resource(ResourceType.LI_TO_PR);
         LineToPrintDescriptor liDes = new LineToPrintDescriptor();
         liDes.setLine(CPU.getAX());
         line.setParent(parentOfVM);
         line.setDescriptor(liDes);
         Core.resourceList.addResource(line);
+        lastCmd.command = OUTR_AX;
     }
 
     private void cmdOutrBx() {
         CPU.setSI((byte) 2);
         short nextCmdAddr = (short) (CPU.getIP() + 1);
         CPU.setIP(nextCmdAddr);
-        lastCmd.command = OUTR_BX;
         Resource line = new Resource(ResourceType.LI_TO_PR);
         LineToPrintDescriptor liDes = new LineToPrintDescriptor();
         liDes.setLine(CPU.getBX());
         line.setParent(parentOfVM);
         line.setDescriptor(liDes);
         Core.resourceList.addResource(line);
+        lastCmd.command = OUTR_BX;
     }
 
     private void cmdOutM(int variable) {
         CPU.setSI((byte) 2);
         short nextCmdAddr = (short) (CPU.getIP() + 1);
         CPU.setIP(nextCmdAddr);
-        lastCmd.command = OUTM;
-        lastCmd.variable = variable;
         Resource line = new Resource(ResourceType.LI_TO_PR);
         LineToPrintDescriptor liDes = new LineToPrintDescriptor();
-        liDes.setLine(memory.get(variable));
+        liDes.setLine(memory.get(CPU.getDS() + variable));
         line.setParent(parentOfVM);
         line.setDescriptor(liDes);
         Core.resourceList.addResource(line);
+        lastCmd.command = OUTM;
+        lastCmd.variable = variable;
     }
 
     private boolean cmdAdd() {

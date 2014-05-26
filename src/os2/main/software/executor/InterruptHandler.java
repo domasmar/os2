@@ -34,7 +34,6 @@ public class InterruptHandler {
         } else if (intDes.getType() == Type.SI) {
             Resource liRes = Core.resourceList.searchChildResource(parentOfVM, ResourceType.LI_TO_PR);
             LineToPrintDescriptor liDes = (LineToPrintDescriptor) liRes.getDescriptor();
-            liDes.getLine();
             Resource r = new Resource(ResourceType.LI_IN_MEM);
             r.setDescriptor(RMMemory.loadStringToMemory(Integer.toString(liDes.getLine())));
             Core.resourceList.addResource(r);
