@@ -81,16 +81,21 @@ public class JobToSwap extends Process {
 			break;
 		case (3):
 			// Nustatinėjami kanalų įrenginio registra ir vygdoma komanda "XCHG"
-			ChannelsDevice.ST = 2; // Šaltinis: supervizorinė atmintis
-			ChannelsDevice.DT = 3; // Tikslas: išorinė atmintis
-			ChannelsDevice.startAddress = this.startAddress;
-			ChannelsDevice.endAddress = this.endAddress;
-			ChannelsDevice.programName = this.programName;
-			if (ChannelsDevice.XCHG()) { // įrašoma programą iš supervizorinės atminties į išorinę
-				this.changeStep(4);
-			}
-			else {
-				this.changeStep(3);
+			res = Core.resourceList.searchChildResource(this, ResourceType.EXEC_PAR);
+			if (res != null) {
+				System.out.println("LABAS");
+				ChannelsDevice.ST = 2; // Šaltinis: supervizorinė atmintis
+				ChannelsDevice.DT = 3; // Tikslas: išorinė atmintis
+				ChannelsDevice.startAddress = this.startAddress;
+				ChannelsDevice.endAddress = this.endAddress;
+				ChannelsDevice.programName = this.programName;
+				if (ChannelsDevice.XCHG()) { // įrašoma programą iš supervizorinės atminties į išorinę
+					this.changeStep(4);
+				}
+				else {
+					res.setParent(null);
+					this.changeStep(3);
+				}
 			}
 			break;
 		case (4):
