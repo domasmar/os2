@@ -83,7 +83,6 @@ public class JobToSwap extends Process {
 			// Nustatinėjami kanalų įrenginio registra ir vygdoma komanda "XCHG"
 			res = Core.resourceList.searchChildResource(this, ResourceType.EXEC_PAR);
 			if (res != null) {
-				System.out.println("LABAS");
 				ChannelsDevice.ST = 2; // Šaltinis: supervizorinė atmintis
 				ChannelsDevice.DT = 3; // Tikslas: išorinė atmintis
 				ChannelsDevice.startAddress = this.startAddress;
