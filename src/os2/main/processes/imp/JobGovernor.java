@@ -90,7 +90,7 @@ public class JobGovernor extends Process {
                 break;
             case (5):
                 InterruptDescriptor intDes = (InterruptDescriptor) intRes.getDescriptor();
-                InterruptHandler handler = new InterruptHandler(intDes, this);
+                InterruptHandler handler = new InterruptHandler(intDes, this, vmm);
                 if (handler.fix()) {
                     intDes.setFixed(true);
                     VirtualMachine vmProcAsVM = (VirtualMachine) vmProc;

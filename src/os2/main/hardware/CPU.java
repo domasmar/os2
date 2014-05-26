@@ -1,7 +1,7 @@
 package os2.main.hardware;
 
 public class CPU {
-
+    public static final int TIMER_CONST = 10; 
     /**
      * darbinis registras
      */
@@ -66,7 +66,7 @@ public class CPU {
     /**
      * timeris
      */
-    private static int TIMER = 9999999;
+    private static int TIMER = TIMER_CONST;
     /**
      * duomenų segmentas
      */

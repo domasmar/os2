@@ -1,7 +1,9 @@
 package os2.main.software.executor;
 
 import os2.main.Core;
+import os2.main.hardware.CPU;
 import os2.main.hardware.memory.RMMemory;
+import os2.main.hardware.memory.VMMemory;
 import os2.main.resources.descriptors.InterruptDescriptor;
 import os2.main.processes.Process;
 import os2.main.resources.Resource;
@@ -18,10 +20,12 @@ public class InterruptHandler {
 
     private InterruptDescriptor intDes;
     private Process parentOfVM;
+    private VMMemory vmm;
 
-    public InterruptHandler(InterruptDescriptor intDes, Process parentOfVM) {
+    public InterruptHandler(InterruptDescriptor intDes, Process parentOfVM, VMMemory vmm) {
         this.intDes = intDes;
         this.parentOfVM = parentOfVM;
+        this.vmm = vmm;
     }
 
     public boolean fix() {
@@ -43,7 +47,8 @@ public class InterruptHandler {
             return false;
 
         } else if (intDes.getType() == Type.TI) {
-            return false;
+            vmm.set(17, CPU.TIMER_CONST);
+            return true;
 
         }
         return false;

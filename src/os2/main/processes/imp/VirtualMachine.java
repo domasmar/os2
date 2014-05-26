@@ -51,18 +51,15 @@ public class VirtualMachine extends Process {
                 break;
             case (1):
                 vmm.loadCPUState();
-                if (exec.executeNext()) {
-                    Resource interrupt = new Resource(ResourceType.INT);
-                    interrupt.setParent(parentOfVM);
-                    interrupt.setDescriptor(InterruptChecker.getInt());
-                    Core.resourceList.addResource(interrupt);
-                    vmm.saveCPUState();
-                    this.changeStep(2);
-                } else {
-                    vmm.saveCPUState();
-                    this.changeStep(1);
+                CPU.setTIMER(CPU.TIMER_CONST);
+                while (!exec.executeNext()){          
                 }
-                
+                Resource interrupt = new Resource(ResourceType.INT);
+                interrupt.setParent(parentOfVM);
+                interrupt.setDescriptor(InterruptChecker.getInt());
+                Core.resourceList.addResource(interrupt);
+                vmm.saveCPUState();
+                this.changeStep(2);
                 break;
             case (2):
                 this.changeStep(2);
