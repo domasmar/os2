@@ -10,6 +10,7 @@ public class FileLoader {
     private int loadedBlocks = 0;
 
     public FileLoader(int[] filenameAsInt) throws Exception {
+        ExtMem.FileSystem.loadHDD();
         ExtMem.FileSystem.initialization();
         fileNo = ExtMem.FileSystem.getFileNo(filenameAsInt);
         if (fileNo == -1) {

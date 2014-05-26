@@ -22,6 +22,14 @@ public class ExtMem {
         }
     }
 
+    public int[] getMemArray() {
+        return this.memory;
+    }
+    
+    public int getSize() {
+        return this.sizeOfMemB;
+    }
+
     private static void setMem(int address, int value) {
         memory[address] = value;
     }
@@ -165,10 +173,15 @@ public class ExtMem {
             setMem(rootSize + lastFATentry, findEmptyFieldInFAT(lastFATentry));
             setMem(rootSize + findEmptyFieldInFAT(lastFATentry), -2);
         }
+        
+        static void loadHDD(){
+            Serializator.load(memory, sizeOfMemInt);
+        }
 
         static void closeSave(int fileNo) {
             int lastFATentry = getLastFATentry(fileNo);
             setMem(rootSize + lastFATentry, 0);
+            Serializator.save(memory, sizeOfMemInt);
         }
 
         static int[] loadBlock(int number, int fileNo) {
