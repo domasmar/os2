@@ -335,7 +335,7 @@ public class ProgramExecutor {
         LineToPrintDescriptor liDes = new LineToPrintDescriptor();
         liDes.setLine(CPU.getAX());
         line.setParent(parentOfVM);
-        line.setDescriptor((ResourceDescriptorInterface) liDes);
+        line.setDescriptor(liDes);
         Core.resourceList.addResource(line);
     }
 
@@ -348,7 +348,7 @@ public class ProgramExecutor {
         LineToPrintDescriptor liDes = new LineToPrintDescriptor();
         liDes.setLine(CPU.getBX());
         line.setParent(parentOfVM);
-        line.setDescriptor((ResourceDescriptorInterface) liDes);
+        line.setDescriptor(liDes);
         Core.resourceList.addResource(line);
     }
 
@@ -362,14 +362,14 @@ public class ProgramExecutor {
         LineToPrintDescriptor liDes = new LineToPrintDescriptor();
         liDes.setLine(memory.get(variable));
         line.setParent(parentOfVM);
-        line.setDescriptor((ResourceDescriptorInterface) liDes);
+        line.setDescriptor(liDes);
         Core.resourceList.addResource(line);
     }
 
     private boolean cmdAdd() {
         int firstEl;
         int secondEl;
-
+        
         try {
             firstEl = memory.pop();
         } catch (RuntimeException e) {
@@ -386,13 +386,6 @@ public class ProgramExecutor {
 
         try {
             memory.push(secondEl);
-        } catch (RuntimeException e) {
-            CPU.setSTI((byte) 1);
-            return true;
-        }
-
-        try {
-            memory.push(firstEl);
         } catch (RuntimeException e) {
             CPU.setSTI((byte) 1);
             return true;
@@ -431,13 +424,6 @@ public class ProgramExecutor {
 
         try {
             memory.push(secondEl);
-        } catch (RuntimeException e) {
-            CPU.setSTI((byte) 1);
-            return true;
-        }
-
-        try {
-            memory.push(firstEl);
         } catch (RuntimeException e) {
             CPU.setSTI((byte) 1);
             return true;
