@@ -12,8 +12,9 @@ public class VMMemory {
 
 	public VMMemory(int ptr, int pageNumber) {
 		this.ptr = ptr;
-		CPU.setPTR(this.ptr);
-		this.saveCPUState();
+		//CPU.setPTR(this.ptr);
+		this.set(2, this.ptr);
+		//this.saveCPUState();
 		this.pageNumber = pageNumber;
 	}
 
