@@ -72,6 +72,8 @@ public class JobGovernor extends Process {
                 
                 break;
             case (3):
+            	vmm.set(14, 0);
+            	vmm.set(10, 0);
                 vmProc = new VirtualMachine(vmm, this);
                 Core.processQueue.add(vmProc);
                 this.changeStep(4);
