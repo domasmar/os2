@@ -8,7 +8,7 @@ public class CommandsConverter {
 
 	private static String[] machineCommands = { "mov", "loa", "sto", "push",
 			"pop", "add", "sub", "cmp", "jmp", "ja", "jb", "je", "jne", "outr",
-			"outm", "fork", "stop" };
+			"outm", "stop" };
 
 	private ArrayList<Variable> variables = new ArrayList<Variable>();
 	private ArrayList<Label> labels = new ArrayList<Label>();
@@ -74,7 +74,7 @@ public class CommandsConverter {
 	private void saveCommands() {
 		ArrayList<String> commands = new ArrayList<String>();
 		for (int i = 0; i <= this.sourceCode.length - 1; i++) {
-			for (int j = 0; j < machineCommands.length - 1; j++) {
+			for (int j = 0; j <= machineCommands.length - 1; j++) {
 				if (this.sourceCode[i].matches(".*\\b(" + machineCommands[j]
 						+ ")\\b.*")) {
 					commands.add(this.sourceCode[i]);

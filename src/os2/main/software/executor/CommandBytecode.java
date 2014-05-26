@@ -25,6 +25,6 @@ public class CommandBytecode {
     public static final byte OUTR_AX = (byte) 0b1110_0000;
     public static final byte OUTR_BX = (byte) 0b1111_0000;
     public static final byte OUTM = (byte) 0b1111_0111;
-    public static final byte STOP = (byte) 0b0000_0001;
+    public static final byte STOP = (byte) 0b1010_1001;
 
 }
